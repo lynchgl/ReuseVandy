@@ -1,25 +1,37 @@
-
-import React, { useState } from 'react'
-import { doc, updateDoc } from 'firebase/firestore'
-import { db } from '../services/firebase.config'
+import React, { useState, useEffect } from 'react';
+import { doc, updateDoc, onSnapshot } from 'firebase/firestore';
+import { db } from '../services/firebase.config';
 
 
 const EditTodo = ({ todo, id }) => {
+  const [todos, setTodos] = useState([todo]);
 
-  const [todos, setTodos] = useState([todo])
+  // Subscribe to real-time updates
+  useEffect(() => {
+    const todoDocument = doc(db, 'todo', id);
+    const unsubscribe = onSnapshot(todoDocument, (snapshot) => {
+      const updatedTodo = { ...snapshot.data(), id: snapshot.id };
+      setTodos(updatedTodo.todo);
+    });
+
+    return () => {
+      // Unsubscribe from real-time updates when the component unmounts
+      unsubscribe();
+    };
+  }, [id]);
 
   const updateTodo = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      const todoDocument = doc(db, "todo", id);
+      const todoDocument = doc(db, 'todo', id);
       await updateDoc(todoDocument, {
-        todo: todos
+        todo: todos,
       });
-      window.location.reload();
+      // No need to reload the entire page; real-time updates will handle it
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
-  }
+  };
 
   return (
     <>

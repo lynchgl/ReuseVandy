@@ -1,34 +1,28 @@
 import React, { useState, useEffect } from 'react'
-import { collection, addDoc, serverTimestamp, getDocs, doc, deleteDoc, runTransaction, orderBy, query } from 'firebase/firestore'
+import { collection, addDoc, serverTimestamp, getDocs, doc, deleteDoc, runTransaction, orderBy, query, onSnapshot } from 'firebase/firestore'
 import EditTodo from './EditTodo'
 
 import { db } from '../services/firebase.config'
 
 const Todo = () => {
+  const [createTodo, setCreateTodo] = useState('');
+  const [todos, setTodos] = useState([]);
 
-  const [createTodo, setCreateTodo] = useState("")
-  const [todos, setTodo] = useState([]);
-
-  const [checked, setChecked] = useState([]);
-
-  const collectionRef = collection(db, 'todo')
+  const collectionRef = collection(db, 'todo');
 
   useEffect(() => {
-    const getTodo = async () => {
-      const q = query(collectionRef, orderBy('timestamp'))
-      await getDocs(q).then((todo) => {
-        let todoData = todo.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-        setTodo(todoData)
-        setChecked(todoData)
-      }).catch((err) => {
-        console.log(err);
-      })
-    }
-    getTodo()
-  }, [])
+    // Subscribe to real-time updates
+    const unsubscribe = onSnapshot(query(collectionRef, orderBy('timestamp')), (snapshot) => {
+      const updatedTodos = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+      setTodos(updatedTodos);
+    });
 
+    return () => {
+      // Unsubscribe from real-time updates when the component unmounts
+      unsubscribe();
+    };
+  }, [collectionRef]);
 
-  //Add Todo Handler
   const submitTodo = async (e) => {
     e.preventDefault();
 
@@ -36,32 +30,26 @@ const Todo = () => {
       await addDoc(collectionRef, {
         todo: createTodo,
         isChecked: false,
-        timestamp: serverTimestamp()
-      })
-      window.location.reload();
+        timestamp: serverTimestamp(),
+      });
+      setCreateTodo(''); // Clear the input after submission
+      // No need to reload the entire page; real-time updates will handle it
     } catch (err) {
-      console.log(err);
+      console.error('Error adding todo:', err);
     }
-  }
+  };
 
-  console.log(todos);
-
-  //Delete Handler
   const deleteTodo = async (id) => {
     try {
-
-      if (window.confirm("Are you sure you want to delete this Task!")) {
-        const documentRef = doc(db, "todo", id);
-        await deleteDoc(documentRef)
-        window.location.reload()
+      if (window.confirm('Are you sure you want to delete this Task!')) {
+        const documentRef = doc(db, 'todo', id);
+        await deleteDoc(documentRef);
+        // No need to reload the entire page; real-time updates will handle it
       }
-
     } catch (err) {
-      console.log(err);
+      console.error('Error deleting todo:', err);
     }
-  }
-
-
+  };
 
   const checkHandler = async (event, todo) => {
     try {
@@ -69,29 +57,25 @@ const Todo = () => {
       const transactionResult = await runTransaction(db, async (transaction) => {
         const todoDoc = await transaction.get(docRef);
         if (!todoDoc.exists()) {
-          throw 'Document does not exist!';
+          throw new Error('Document does not exist!');
         }
         const newValue = !todoDoc.data().isChecked;
         transaction.update(docRef, { isChecked: newValue });
         return newValue;
       });
 
-      setChecked((state) => {
-        const indexToUpdate = state.findIndex(
-          (checkBox) => checkBox.id.toString() === event.target.name
+      setTodos((state) => {
+        const updatedTodos = state.map((checkBox) =>
+          checkBox.id.toString() === event.target.name
+            ? { ...checkBox, isChecked: transactionResult }
+            : checkBox
         );
-        let newState = state.slice();
-        newState.splice(indexToUpdate, 1, {
-          ...state[indexToUpdate],
-          isChecked: transactionResult,
-        });
-        setTodo(newState);
-        return newState;
+        return updatedTodos;
       });
 
       console.log('Transaction successfully committed!');
     } catch (error) {
-      console.log('Transaction failed: ', error);
+      console.error('Transaction failed:', error);
     }
   };
 
