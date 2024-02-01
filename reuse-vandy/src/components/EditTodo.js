@@ -37,10 +37,10 @@ const EditTodo = ({ todo, id }) => {
     <>
       <button
         type="button"
-        className="btn btn-primary"
+        className="btn btn-warning"
         data-bs-toggle="modal"
         data-bs-target={`#id${id}`}      >
-        Edit Todo
+        Edit Product
       </button>
 
       <div

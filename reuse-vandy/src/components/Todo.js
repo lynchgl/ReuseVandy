@@ -90,7 +90,7 @@ const Todo = () => {
                   data-bs-toggle="modal"
                   data-bs-target="#addModal"
                   type="button"
-                  className="btn btn-info">Add Todo
+                  className="btn btn-warning">Add Product
                 </button>
 
                 {todos.map(({ todo, id, isChecked, timestamp }) =>
@@ -135,21 +135,21 @@ const Todo = () => {
           <form className="d-flex" onSubmit={submitTodo}>
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="addModalLabel">Add Todo</h5>
+                <h5 className="modal-title" id="addModalLabel">Add Product</h5>
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div className="modal-body">
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="Add a Todo"
+                  placeholder="Add a Product"
                   onChange={(e) => setCreateTodo(e.target.value)}
                 />
               </div>
               <div className="modal-footer">
                 <button className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
-                <button className="btn btn-primary">Create Todo</button>
+                <button className="btn btn-primary">Create New Listing</button>
               </div>
             </div>
           </form>
