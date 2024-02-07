@@ -1,14 +1,19 @@
-import React, { useState, useEffect } from 'react'
-import { collection, addDoc, serverTimestamp, getDocs, doc, deleteDoc, runTransaction, orderBy, query, onSnapshot } from 'firebase/firestore'
-import EditTodo from './EditTodo'
+import React, { useState, useEffect } from 'react';
+import { collection, addDoc, serverTimestamp, doc, deleteDoc, runTransaction, orderBy, query, onSnapshot } from 'firebase/firestore';
+import EditTodo from './EditTodo';
+import '../styles/styles.css';
 
-import { db } from '../services/firebase.config'
+// Import the correct db reference
+import { dbTodos } from '../services/firebase.config';
+
+import { Link } from 'react-router-dom';
 
 const Todo = () => {
   const [createTodo, setCreateTodo] = useState('');
   const [todos, setTodos] = useState([]);
 
-  const collectionRef = collection(db, 'todo');
+  // Use the correct db reference
+  const collectionRef = collection(dbTodos, 'todos');
 
   useEffect(() => {
     // Subscribe to real-time updates
@@ -42,7 +47,7 @@ const Todo = () => {
   const deleteTodo = async (id) => {
     try {
       if (window.confirm('Are you sure you want to delete this Task!')) {
-        const documentRef = doc(db, 'todo', id);
+        const documentRef = doc(dbTodos, 'todos', id);
         await deleteDoc(documentRef);
         // No need to reload the entire page; real-time updates will handle it
       }
@@ -53,8 +58,8 @@ const Todo = () => {
 
   const checkHandler = async (event, todo) => {
     try {
-      const docRef = doc(db, 'todo', event.target.name);
-      const transactionResult = await runTransaction(db, async (transaction) => {
+      const docRef = doc(dbTodos, 'todos', event.target.name);
+      const transactionResult = await runTransaction(dbTodos, async (transaction) => {
         const todoDoc = await transaction.get(docRef);
         if (!todoDoc.exists()) {
           throw new Error('Document does not exist!');
@@ -78,9 +83,9 @@ const Todo = () => {
       console.error('Transaction failed:', error);
     }
   };
-
   return (
     <>
+    <div className='todo-container'>
       <div className="container">
         <div className="row">
           <div className="col-md-12">
@@ -92,6 +97,7 @@ const Todo = () => {
                   type="button"
                   className="btn btn-warning">Add Product
                 </button>
+
 
                 {todos.map(({ todo, id, isChecked, timestamp }) =>
                   <div className="todo-list" key={id}>
@@ -129,6 +135,13 @@ const Todo = () => {
         </div>
       </div>
 
+           {/* Button to navigate to another page */}
+           <div className="top-right-button">
+        <Link to="/Marketplace">
+          <button className="btn btn-primary">Go to Marketplace</button>
+        </Link>
+      </div>
+
       {/* Modal */}
       <div className="modal fade" id="addModal" tabIndex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
         <div className="modal-dialog">
@@ -154,6 +167,7 @@ const Todo = () => {
             </div>
           </form>
         </div>
+      </div>
       </div>
     </>
   )

@@ -1,0 +1,17 @@
+/* styles.css */
+
+/* Common styles */
+body {
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Todo.js specific styles */
+  .todo-container {
+    background-color: purple;
+  }
+  
+  /* MarketplaceListing.js specific styles */
+  .marketplace-container {
+    background-color: grey;
+  }
+  

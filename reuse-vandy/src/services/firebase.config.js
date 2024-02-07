@@ -2,11 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyBjVRGi-_hJqdxjPA9d2jodIG4y7Aj7X0I",
   authDomain: "reuse-vandy-e1cdd.firebaseapp.com",
@@ -17,9 +13,12 @@ const firebaseConfig = {
   measurementId: "G-5DSM14JWXR"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-//const analytics = getAnalytics(app);
 
+// Export the Firestore instance for Marketplace listings
+const dbMarketplaceListings = getFirestore(app);
 
-export const db = getFirestore(app);
+// Export the Firestore instance for Todo items
+const dbTodos = getFirestore(app);
+
+export { dbMarketplaceListings, dbTodos };
