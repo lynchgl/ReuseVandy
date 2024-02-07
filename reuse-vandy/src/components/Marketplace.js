@@ -10,6 +10,8 @@ const Marketplace = () => {
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('');
   const [marketplaceListings, setMarketplaceListings] = useState([]);
+  const categories = ['Home', 'Clothes', 'Books', 'Jewelry', 'Electronics', 'Toys', 'Other'];
+
 
   const collectionRef = collection(dbMarketplaceListings, 'listings');
 
@@ -107,7 +109,7 @@ return (
                     )}
                   </p>
                   <div className="mt-auto"> {/* Added 'mt-auto' for pushing the buttons to the bottom */}
-                    <EditMarketplaceListing listing={{ title, category, price, id, timestamp }} />
+                  <EditMarketplaceListing listing={{ title, category, price, id, timestamp }} categories={categories} />
                     <button
                       type="button"
                       className="btn btn-danger"
@@ -159,14 +161,17 @@ return (
                 </div>
                 <div className="mb-3">
                   <label htmlFor="categoryInput" className="form-label">Category:</label>
-                  <input
-                    type="text"
-                    className="form-control"
+                  <select
+                    className="form-select"
                     id="categoryInput"
-                    placeholder="Enter category"
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                  />
+                  >
+                    <option value="">Select a category</option>
+                    {categories.map((cat, index) => (
+                      <option key={index} value={cat}>{cat}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
               <div className="modal-footer">

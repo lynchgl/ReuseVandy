@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { doc, updateDoc } from 'firebase/firestore';
 import { dbMarketplaceListings } from '../services/firebase.config';
 
-const EditMarketplaceListing = ({ listing }) => {
+const EditMarketplaceListing = ({ listing, categories }) => {
   const [editedListing, setEditedListing] = useState({ ...listing });
 
   const handleEdit = async (e) => {
@@ -65,13 +65,17 @@ const EditMarketplaceListing = ({ listing }) => {
                 </div>
                 <div className="mb-3">
                   <label htmlFor={`categoryInput-${listing.id}`} className="form-label">Category:</label>
-                  <input
-                    type="text"
-                    className="form-control"
+                  <select
+                    className="form-select"
                     id={`categoryInput-${listing.id}`}
                     value={editedListing.category}
                     onChange={(e) => setEditedListing({ ...editedListing, category: e.target.value })}
-                  />
+                  >
+                    <option value="">Select a category</option>
+                    {categories.map((cat, index) => (
+                      <option key={index} value={cat}>{cat}</option>
+                    ))}
+                  </select>
                 </div>
                 {/* Add more input fields for other editable fields */}
               </div>
