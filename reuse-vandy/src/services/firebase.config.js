@@ -21,4 +21,7 @@ const dbMarketplaceListings = getFirestore(app);
 // Export the Firestore instance for Todo items
 const dbTodos = getFirestore(app);
 
-export { dbMarketplaceListings, dbTodos };
+// Export the Firestore instance for Profile items
+const dbUsers = getFirestore(app);
+export { dbMarketplaceListings, dbTodos, dbUsers
+ };
