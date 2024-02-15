@@ -1,0 +1,31 @@
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 50px;
+    background-color: #f8f9fa; 
+}
+
+nav .nav-links {
+    display: flex;
+}
+  
+nav a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    margin-right: 100px;
+}
+
+nav a:last-child {
+    margin-right: 0;
+}
+
+.sell-button {
+    background-color: #ffd700;
+    color: black;
+    padding: 10px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+}
+  

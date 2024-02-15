@@ -1,0 +1,64 @@
+.sell-item-page {
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+}
+  
+.sell-item-page h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+  
+.form-group {
+    margin-bottom: 15px;
+    width: 300px;
+}
+  
+label {
+    display: block;
+    font-weight: bold;
+}
+  
+.price-input-wrapper {
+    display: flex;
+}
+  
+.dollar-sign {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+    background-color: #f9f9f9;
+}
+  
+input[type="number"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 0 5px 5px 0;
+    font-size: 16px;
+}
+  
+button[type="submit"] {
+    background-color: #ffd700;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+}
+  
+button[type="submit"]:hover {
+    background-color: #ffd700;
+}
+  
+select {
+    width: 100%; /* Adjust the width as needed */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
