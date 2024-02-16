@@ -1,12 +1,32 @@
 // src/components/Header.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import logo from '../../images/logo.png'
 import shoppingCartIcon from '../../images/shopping cart.png'; // Import shopping cart icon
 import profileIcon from '../../images/profile.png'; // Import profile icon
 import './Header.css'
+import { auth } from '../../services/firebase.config';
 
 const Header = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsLoggedIn(!!user); // Update the isLoggedIn state based on the user's presence
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
   return (
     <header className="header-container">
       <div className="logo-container">
@@ -23,7 +43,13 @@ const Header = () => {
         </Link>
         <nav>
         <ul>
+        {isLoggedIn ? (
+              <li>
+                <button onClick={handleLogout}>Log Out</button>
+              </li>
+            ) : (
           <li><Link to="/signin">Sign In</Link></li>
+            )}
         </ul>
       </nav>
       </div>

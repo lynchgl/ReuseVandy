@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
-import { dbMarketplaceListings } from '../../services/firebase.config';
+import { dbMarketplaceListings, auth } from '../../services/firebase.config';
 import './SellItem.css';
 
 const SellItemPage = () => {
   const [title, setTitle] = useState('');
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('');
+  const [error, setError] = useState('');
   const categories = ['Home', 'Clothes', 'Books', 'Jewelry', 'Electronics', 'Toys', 'Other'];
 
+  
   const submitListing = async (e) => {
     e.preventDefault();
 
@@ -18,10 +20,17 @@ const SellItemPage = () => {
         throw new Error('Invalid price. Please enter a valid number.');
       }
 
+      const user = auth.currentUser;
+
+      if (!user) {
+        throw new Error('Please sign in before listing an item.');
+      }
+
       await addDoc(collection(dbMarketplaceListings, 'listings'), {
         title,
         price: parsedPrice,
         category,
+        userId: user.uid, // Associate the listing with the user ID
         timestamp: serverTimestamp(),
       });
       setTitle('');
@@ -30,12 +39,14 @@ const SellItemPage = () => {
       window.location.href = '/';
     } catch (err) {
       console.error('Error adding listing:', err);
+      setError(err.message);
     }
   };
 
   return (
     <div className="sell-item-page">
       <h1>Sell an Item</h1>
+      {error && <div style={{ color: 'red' }}>{error}</div>} {/* Display error if exists */}
       <form onSubmit={submitListing}>
         <div className="form-group">
           <label htmlFor="titleInput">Title:</label>
