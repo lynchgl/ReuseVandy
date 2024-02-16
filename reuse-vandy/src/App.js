@@ -5,6 +5,7 @@ import MarketplaceListing from './components/HomePage/HomePage';
 import Header from './components/Header/Header';
 import SellItem from './components/SellItem/SellItem';
 import SignIn from './components/SignIn/SignIn';
+import SignUp from './components/SignUp/SignUp';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/marketplace" element={<MarketplaceListing />} />
         <Route path="/sell" element={<SellItem />} />
         <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
       </Routes>
     </div>
   );

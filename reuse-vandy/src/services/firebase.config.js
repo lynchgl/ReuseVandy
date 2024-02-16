@@ -27,4 +27,6 @@ const dbUsers = getFirestore(app);
 
 const auth = getAuth(app);
 
-export { dbMarketplaceListings, dbTodos, dbUsers, auth };
+const db = getFirestore(app);
+
+export { dbMarketplaceListings, dbTodos, dbUsers, auth, db };
