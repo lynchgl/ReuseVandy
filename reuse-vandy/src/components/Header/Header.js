@@ -38,7 +38,7 @@ const Header = () => {
         <Link to="/cart">
           <img src={shoppingCartIcon} alt="Shopping Cart" className="icon" />
         </Link>
-        <Link to="/profile">
+        <Link to={isLoggedIn ? '/profile' : '/signin'}>
           <img src={profileIcon} alt="Profile" className="icon" />
         </Link>
         <nav>

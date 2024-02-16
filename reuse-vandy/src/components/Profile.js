@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import React, { useState, useEffect } from 'react';
+import { collection, addDoc, serverTimestamp, updateDoc, doc, getDocs, query, where } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';  // Import necessary storage functions
-import { dbUsers } from '../services/firebase.config';
+import { dbUsers, auth } from '../services/firebase.config';
 import { Link } from 'react-router-dom';
 
 const Profile = () => {
@@ -9,9 +9,43 @@ const Profile = () => {
   const [age, setAge] = useState('');
   const [bio, setBio] = useState('');
   const [profileImage, setProfileImage] = useState(null);
+  // eslint-disable-next-line
+  const [userId, setUserId] = useState('');
+  const [profileCompleted, setProfileCompleted] = useState(false);
 
   const collectionRef = collection(dbUsers, 'profiles');
   const storage = getStorage();  // Create a storage instance
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const user = auth.currentUser;
+        if (!user) {
+          // Redirect or handle case where user is not authenticated
+          return;
+        }
+
+        setUserId(user.uid);
+
+        // Fetch user profile from Firestore
+        const q = query(collectionRef, where('userId', '==', user.uid));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.docs.length > 0) {
+          const profileData = querySnapshot.docs[0].data();
+          setName(profileData.name);
+          setAge(profileData.age.toString());
+          setBio(profileData.bio);
+          setProfileCompleted(true);
+          // TODO: set image
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+
+    fetchProfile();
+  }, [collectionRef]);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -22,6 +56,12 @@ const Profile = () => {
     e.preventDefault();
 
     try {
+      const user = auth.currentUser;
+      if (!user) {
+        // Redirect or handle case where user is not authenticated
+        return;
+      }
+
       //upload image to storage
       const storageRef = ref(storage);
       const imageRef = ref(storageRef, `profile_images/${name}-${Date.now()}`);
@@ -31,25 +71,56 @@ const Profile = () => {
       const imageUrl = await getDownloadURL(imageRef);
       console.log('Image URL:', imageUrl);
 
-      // Add profile to Firestore with image URL
-      await addDoc(collectionRef, {
-        name,
-        age: parseInt(age),
-        bio,
-        imageUrl,
-        timestamp: serverTimestamp(),
-      });
+      if (profileCompleted) {
+        // Update existing profile
+        const q = query(collectionRef, where('userId', '==', user.uid));
+        const querySnapshot = await getDocs(q);
+        const profileDocId = querySnapshot.docs[0].id;
+        await updateDoc(doc(collectionRef, profileDocId), {
+          name,
+          age: parseInt(age),
+          bio,
+          imageUrl,
+          timestamp: serverTimestamp(),
+        });
+      } else {
+        // Add new profile
+        await addDoc(collectionRef, {
+          userId: user.uid,
+          name,
+          age: parseInt(age),
+          bio,
+          imageUrl,
+          timestamp: serverTimestamp(),
+        });
+
+        // Mark profile as completed
+        setProfileCompleted(true);
+      }
+
+      // reset values
       setName('');
       setAge('');
       setBio('');
       setProfileImage(null);
     } catch (err) {
-      console.error('Error adding profile:', err);
+      console.error('Error updating/adding profile:', err);
     }
   };
 
   return (
     <div className="profile-container">
+      {profileCompleted ? (
+      <div>
+        <h1>Your Profile</h1>
+        <p>Name: {name}</p>
+        <p>Age: {age}</p>
+        <p>Bio: {bio}</p>
+        {/* Add profile image if available */}
+        {/* TODO: Add image display */}
+      </div>
+    ) : (
+      <div>
       <h1>Fill out your profile</h1>
       <form onSubmit={submitProfile}>
         <div className="form-group">
@@ -97,6 +168,7 @@ const Profile = () => {
         </div>
         <button type="submit" className="btn btn-primary">Submit</button>
       </form>
+      </div>)}
 
       {/* Button to navigate to another page */}
       <div className="top-right-button">
