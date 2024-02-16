@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { getAuth } from 'firebase/auth';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -23,5 +24,7 @@ const dbTodos = getFirestore(app);
 
 // Export the Firestore instance for Profile items
 const dbUsers = getFirestore(app);
-export { dbMarketplaceListings, dbTodos, dbUsers
- };
+
+const auth = getAuth(app);
+
+export { dbMarketplaceListings, dbTodos, dbUsers, auth };

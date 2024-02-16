@@ -21,6 +21,11 @@ const Header = () => {
         <Link to="/profile">
           <img src={profileIcon} alt="Profile" className="icon" />
         </Link>
+        <nav>
+        <ul>
+          <li><Link to="/signin">Sign In</Link></li>
+        </ul>
+      </nav>
       </div>
     </header>
   );
