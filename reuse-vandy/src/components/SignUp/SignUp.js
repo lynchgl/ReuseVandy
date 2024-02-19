@@ -14,6 +14,12 @@ const SignUp = () => {
   const handleSignUp = async (e) => {
     e.preventDefault();
 
+     // Check if email ends with "@vanderbilt.edu"
+     if (!email.endsWith('@vanderbilt.edu')) {
+      setError('Email must end with "@vanderbilt.edu"');
+      return;
+    }
+
     try {
       // Create user in Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -27,6 +33,8 @@ const SignUp = () => {
       });
       
       setSuccess('Sign-up successful!'); // Set success message in state
+      setError(null); // Reset error state
+
     } catch (error) {
       setError(error.message); // Set the error message in state
       console.error('Error creating user:', error.message);

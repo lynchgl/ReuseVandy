@@ -1,7 +1,7 @@
 // EditMarketplaceListing.js
 import React, { useState } from 'react';
 import { doc, updateDoc } from 'firebase/firestore';
-import { dbMarketplaceListings } from '../services/firebase.config';
+import { dbMarketplaceListings, auth } from '../services/firebase.config';
 
 const EditMarketplaceListing = ({ listing, categories }) => {
   const [editedListing, setEditedListing] = useState({ ...listing });
@@ -23,17 +23,20 @@ const EditMarketplaceListing = ({ listing, categories }) => {
     }
   };
 
+  const user = auth.currentUser;
+
   return (
     <>
-      <button
-        type="button"
-        className="btn btn-primary"
-        data-bs-toggle="modal"
-        data-bs-target={`#editModal-${listing.id}`}
-      >
-        Edit
-      </button>
-
+      {user && (
+        <button
+          type="button"
+          className="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target={`#editModal-${listing.id}`}
+        >
+          Edit
+        </button>
+      )}
       <div className="modal fade" id={`editModal-${listing.id}`} tabIndex="-1" aria-labelledby={`editModalLabel-${listing.id}`} aria-hidden="true">
         <div className="modal-dialog">
           <form className="d-flex" onSubmit={handleEdit}>

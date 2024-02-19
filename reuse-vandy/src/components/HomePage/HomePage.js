@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, doc, deleteDoc, onSnapshot, orderBy, query } from 'firebase/firestore';
 import EditMarketplaceListing from '../EditMarketplaceListing';
-import { dbMarketplaceListings } from '../../services/firebase.config';
+import { dbMarketplaceListings, auth } from '../../services/firebase.config';
 import './HomePage.css'
 import NavigationBar from '../NavigationBar/NavigationBar';
 
@@ -34,6 +34,8 @@ const Marketplace = () => {
       console.error('Error deleting listing:', err);
     }
   };
+
+  const user = auth.currentUser;
 
   return (
     <>
@@ -73,13 +75,13 @@ const Marketplace = () => {
                   </p>
                   <div className="mt-auto">
                     <EditMarketplaceListing listing={{ title, category, price, id, timestamp }} categories={categories} />
-                    <button
+                    {user && (<button
                       type="button"
                       className="btn btn-danger"
                       onClick={() => deleteListing(id)}
                     >
                       Delete
-                    </button>
+                    </button>)}
                   </div>
                 </div>
               </div>

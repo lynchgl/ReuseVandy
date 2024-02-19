@@ -9,6 +9,7 @@ const SignIn = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
+
   const handleSignIn = async (e) => {
     e.preventDefault();
     try {
@@ -16,6 +17,8 @@ const SignIn = () => {
       setSuccess('Sign-in successful!'); // Set success message in state
 
       // TODO: Redirect after successful sign-in
+      
+
     } catch (error) {
       setError(error.message); // Set the error message in state
       console.error('Error signing in:', error.message);
