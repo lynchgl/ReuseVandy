@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { collection, doc, deleteDoc, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { collection, doc, deleteDoc, onSnapshot, orderBy, query, where, getDocs } from 'firebase/firestore';
 import EditMarketplaceListing from '../EditMarketplaceListing';
-import { dbMarketplaceListings, auth } from '../../services/firebase.config';
+import { dbMarketplaceListings, dbUsers, auth } from '../../services/firebase.config';
 import './HomePage.css'
 import NavigationBar from '../NavigationBar/NavigationBar';
 
 const Marketplace = () => {
   const [marketplaceListings, setMarketplaceListings] = useState([]);
   const categories = ['Home', 'Clothes', 'Books', 'Jewelry', 'Electronics', 'Toys', 'Other'];
+  const [userName, setUserName] = useState('');
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -36,6 +37,27 @@ const Marketplace = () => {
   };
 
   const user = auth.currentUser;
+
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          // Fetch user profile from Firestore based on user's UID
+          const q = query(collection(dbUsers, 'profiles'), where('userId', '==', user.uid));
+          const querySnapshot = await getDocs(q);
+
+          if (querySnapshot.docs.length > 0) {
+            const profileData = querySnapshot.docs[0].data();
+            setUserName(profileData.name);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+      }
+    };
+    fetchUserName();
+  }, []);
 
   return (
     <>
@@ -71,7 +93,7 @@ const Marketplace = () => {
                         <i>{new Date(timestamp.seconds * 1000).toLocaleString()}</i>
                       </small>
                     )}
-                    {userId && <p className="text-muted">Listed by: {userId}</p>}
+                    {userId && <p className="text-muted">Listed by: {userName}</p>}
                   </p>
                   <div className="mt-auto">
                     {user && user.uid === userId && (

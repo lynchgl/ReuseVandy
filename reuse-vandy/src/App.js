@@ -12,6 +12,7 @@ function App() {
     <div className="App">
       <Header />
       <Routes>
+        <Route index element={<MarketplaceListing />} />
         <Route path='/' element={<MarketplaceListing />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/marketplace" element={<MarketplaceListing />} />
