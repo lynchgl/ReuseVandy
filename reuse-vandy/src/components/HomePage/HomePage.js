@@ -56,7 +56,7 @@ const Marketplace = () => {
       {/* Main content */}
       <div className="container mt-4">
         <div className="row">
-          {marketplaceListings.map(({ title, category, price, id, timestamp, userID }) => (
+          {marketplaceListings.map(({ title, category, price, id, timestamp, userId }) => (
             <div className="col-md-4 mb-3" key={id}>
               <div className="card h-100">
                 <div className="card-body d-flex flex-column">
@@ -71,17 +71,21 @@ const Marketplace = () => {
                         <i>{new Date(timestamp.seconds * 1000).toLocaleString()}</i>
                       </small>
                     )}
-                    {userID && <p className="text-muted">Listed by: {userID}</p>}
+                    {userId && <p className="text-muted">Listed by: {userId}</p>}
                   </p>
                   <div className="mt-auto">
+                    {user && user.uid === userId && (
+                      <>
                     <EditMarketplaceListing listing={{ title, category, price, id, timestamp }} categories={categories} />
-                    {user && (<button
+                    <button
                       type="button"
                       className="btn btn-danger"
                       onClick={() => deleteListing(id)}
                     >
                       Delete
-                    </button>)}
+                    </button>
+                    </>
+          )}
                   </div>
                 </div>
               </div>
