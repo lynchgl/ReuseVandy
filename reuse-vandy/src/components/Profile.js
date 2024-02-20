@@ -1,3 +1,5 @@
+// profile.js
+
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc, serverTimestamp, updateDoc, doc, getDocs, query, where } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';  // Import necessary storage functions

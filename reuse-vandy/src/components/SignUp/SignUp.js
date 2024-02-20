@@ -4,12 +4,14 @@ import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../../services/firebase.config.js';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { Navigate } from 'react-router-dom';
 
 const SignUp = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
+    const [profileCreated, setProfileCreated] = useState(false);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -38,12 +40,18 @@ const SignUp = () => {
       
       setSuccess('Sign-up successful!'); // Set success message in state
       setError(null); // Reset error state
+      setProfileCreated(true);
 
     } catch (error) {
       setError(error.message); // Set the error message in state
       console.error('Error creating user:', error.message);
     }
+    setProfileCreated(true);
   };
+
+  if (profileCreated) {
+    return <Navigate to="/profile" />;
+  }
 
   return (
     <div>
