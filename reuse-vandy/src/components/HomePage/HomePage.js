@@ -8,7 +8,6 @@ import NavigationBar from '../NavigationBar/NavigationBar';
 const Marketplace = () => {
   const [marketplaceListings, setMarketplaceListings] = useState([]);
   const categories = ['Home', 'Clothes', 'Books', 'Jewelry', 'Electronics', 'Toys', 'Other'];
-  const [userName, setUserName] = useState('');
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -38,26 +37,26 @@ const Marketplace = () => {
 
   const user = auth.currentUser;
 
-  useEffect(() => {
-    const fetchUserName = async () => {
-      try {
-        const user = auth.currentUser;
-        if (user) {
-          // Fetch user profile from Firestore based on user's UID
-          const q = query(collection(dbUsers, 'profiles'), where('userId', '==', user.uid));
-          const querySnapshot = await getDocs(q);
+  // fetches usernames for all users that have items listed
+  const [userNames, setUserNames] = useState({});
+  const fetchUserNames = async (userIds) => {
+    const names = {};
+    for (const userId of userIds) {
+      const q = query(collection(dbUsers, 'profiles'), where('userId', '==', userId));
+      const querySnapshot = await getDocs(q);
 
-          if (querySnapshot.docs.length > 0) {
-            const profileData = querySnapshot.docs[0].data();
-            setUserName(profileData.name);
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching user profile:', error);
+      if (querySnapshot.docs.length > 0) {
+        const profileData = querySnapshot.docs[0].data();
+        names[userId] = profileData.name;
       }
-    };
-    fetchUserName();
-  }, []);
+    }
+    setUserNames(names);
+  };
+
+  useEffect(() => {
+    const userIds = marketplaceListings.map((listing) => listing.userId).filter(Boolean);
+    fetchUserNames(userIds);
+  }, [marketplaceListings]);
 
   return (
     <>
@@ -93,7 +92,7 @@ const Marketplace = () => {
                         <i>{new Date(timestamp.seconds * 1000).toLocaleString()}</i>
                       </small>
                     )}
-                    {userId && <p className="text-muted">Listed by: {userName}</p>}
+                    {userId && userNames[userId] && <p className="text-muted">Listed by: {userNames[userId]}</p>}
                   </p>
                   <div className="mt-auto">
                     {user && user.uid === userId && (
