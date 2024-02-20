@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../../services/firebase.config.js';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 
 const SignUp = () => {
     const [email, setEmail] = useState('');
@@ -29,7 +29,11 @@ const SignUp = () => {
       await addDoc(collection(db, 'users'), {
         userId: user.uid,
         email: user.email,
-        // Add more user data as needed
+        name: '',
+        age: null,
+        bio: '',
+        imageUrl: '',
+        timestamp: serverTimestamp(),
       });
       
       setSuccess('Sign-up successful!'); // Set success message in state
