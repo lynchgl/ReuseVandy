@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../../services/firebase.config.js';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
 import './SignUp.css'; // Import SignUp.css file for styling
 import hideIcon from '../../images/hide password.png'
 import showIcon from '../../images/show password.png'
@@ -144,6 +144,8 @@ const SignUp = () => {
         </div>
 
         <button type="submit">Sign Up</button>
+
+        <p className="small-text">Already have an account? <Link to="/signin">Sign In</Link></p>
       </form>
     </div>
   );

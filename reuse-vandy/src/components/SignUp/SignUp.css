@@ -10,6 +10,7 @@
 .signup-container h2 {
     font-size: 24px;
     margin-bottom: 20px;
+    text-align: center;
 }
 
 .signup-container label {
@@ -79,6 +80,8 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
     margin-top: 16px;
+    margin-bottom: 16px;
+    font-weight: bold;
 }
 
 .signup-container button[type="submit"]:hover {
@@ -94,4 +97,8 @@
 .success-message {
     color: green;
     margin-bottom: 10px;
+}
+
+.small-text {
+    font-size: 13px;
 }
