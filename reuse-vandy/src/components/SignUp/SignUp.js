@@ -4,6 +4,8 @@ import { auth, db } from '../../services/firebase.config.js';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { Navigate } from 'react-router-dom';
 import './SignUp.css'; // Import SignUp.css file for styling
+import hideIcon from '../../images/hide password.png'
+import showIcon from '../../images/show password.png'
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
@@ -100,12 +102,13 @@ const SignUp = () => {
             }}
             required
           />
-          <img
-            src={showPassword ? '/../images/hide password.png' : '/../images/show password.png'}
-            alt={showPassword ? 'Hide' : 'Show'}
+          <button
+            type="button"
             className="password-toggle-icon"
             onClick={() => setShowPassword(!showPassword)}
-          />
+          >
+            <img src={showPassword ? hideIcon : showIcon} alt={showPassword ? 'Hide' : 'Show'} />
+          </button>
         </div>
 
         <div className="password-restrictions">
@@ -133,10 +136,10 @@ const SignUp = () => {
           />
           <button
             type="button"
-            className="password-toggle-btn"
+            className="password-toggle-icon"
             onClick={() => setShowConfirmedPassword(!showConfirmedPassword)}
           >
-            {showConfirmedPassword ? 'Hide' : 'Show'}
+            <img src={showPassword ? hideIcon : showIcon} alt={showPassword ? 'Hide' : 'Show'} />
           </button>
         </div>
 

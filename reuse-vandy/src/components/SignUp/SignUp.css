@@ -19,31 +19,35 @@
 
 .signup-container input[type="email"],
 .signup-container input[type="password"] {
-    width: calc(100% - 40px); /* Adjusted width to accommodate button */
+    width: 350px;
     padding: 10px;
     margin-bottom: 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    position: relative;
 }
 
 .signup-container .password-input-container {
     position: relative;
+    width: 350px;
 }
 
-.signup-container .password-toggle-btn {
+.signup-container .password-toggle-icon {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    right: 5px; /* Adjusted right position */
-    background: none;
-    border: none;
+    right: 10px;
+    width: 30px; /* Fixed width for the button */
+    height: 30px; /* Fixed height for the button */
     cursor: pointer;
-    font-size: 12px;
-    color: #333; /* Adjusted color */
+    display: flex; /* Add flex display */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
 }
 
-.signup-container .password-toggle-btn:focus {
-    outline: none;
+.signup-container .password-toggle-icon img {
+    width: 150%;
+    height: auto;
 }
 
 .signup-container .password-restrictions {
