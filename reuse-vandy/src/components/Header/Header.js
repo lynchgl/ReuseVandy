@@ -21,6 +21,7 @@ const Header = () => {
 
   // Function to check if the current location is the sign-in page
   const isSignInPage = () => location.pathname === '/signin';
+  const isSignUpPage = () => location.pathname === '/signup';
 
   return (
     <header className="header-container">
@@ -30,7 +31,7 @@ const Header = () => {
         </Link>
       </div>
       <div className="nav-container">
-        {!isLoggedIn && !isSignInPage() && (
+        {!isLoggedIn && !isSignInPage() && !isSignUpPage && (
           <Link to="/signin">
             <button className="signin-button">Sign In</button>
           </Link>

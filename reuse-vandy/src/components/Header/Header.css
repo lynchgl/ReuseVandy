@@ -25,6 +25,7 @@
 .signin-button {
     background-color: #ffd700; /* Yellow background color */
     color: #000; /* Black text color */
+    font-weight: bold;
     padding: 10px 20px; /* Adjust padding */
     border-radius: 20px; /* Rounded edges */
     border: none;

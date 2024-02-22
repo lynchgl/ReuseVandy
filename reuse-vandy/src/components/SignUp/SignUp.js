@@ -1,10 +1,9 @@
-// SignUp.js
-
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../../services/firebase.config.js';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { Navigate } from 'react-router-dom';
+import './SignUp.css'; // Import SignUp.css file for styling
 
 const SignUp = () => {
     const [email, setEmail] = useState('');
@@ -54,10 +53,10 @@ const SignUp = () => {
   }
 
   return (
-    <div>
+    <div className="signup-container">
       <h2>Sign Up</h2>
-      {error && <div style={{ color: 'red' }}>{error}</div>} {/* Display error if exists */}
-      {success && <div style={{ color: 'green' }}>{success}</div>} {/* Display success if exists */}
+      {error && <div className="error-message">{error}</div>} {/* Display error if exists */}
+      {success && <div className="success-message">{success}</div>} {/* Display success if exists */}
       
       <form onSubmit={handleSignUp}>
         <label>Email:</label>
