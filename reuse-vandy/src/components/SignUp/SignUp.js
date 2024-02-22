@@ -8,9 +8,14 @@ import './SignUp.css'; // Import SignUp.css file for styling
 const SignUp = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
     const [profileCreated, setProfileCreated] = useState(false);
+    const [passwordLengthValid, setPasswordLengthValid] = useState(false);
+    const [passwordUpperCaseValid, setPasswordUpperCaseValid] = useState(false);
+    const [passwordNumberValid, setPasswordNumberValid] = useState(false);
+    const [passwordSpecialCharValid, setPasswordSpecialCharValid] = useState(false);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -18,6 +23,19 @@ const SignUp = () => {
      // Check if email ends with "@vanderbilt.edu"
      if (!email.endsWith('@vanderbilt.edu')) {
       setError('Email must end with "@vanderbilt.edu"');
+      return;
+    }
+
+    // Password validation
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/;
+    if (!password.match(passwordRegex)) {
+      setError('Password must be at least 12 characters long and contain at least one uppercase letter, one number, and one special character.');
+      return;
+    }
+
+    // Check if passwords match
+    if (password !== confirmPassword) {
+      setError('Passwords do not match.');
       return;
     }
 
@@ -52,6 +70,13 @@ const SignUp = () => {
     return <Navigate to="/profile" />;
   }
 
+  const updatePasswordValidity = (password) => {
+    setPasswordLengthValid(password.length >= 12);
+    setPasswordUpperCaseValid(/[A-Z]/.test(password));
+    setPasswordNumberValid(/\d/.test(password));
+    setPasswordSpecialCharValid(/[!@#$%%^&*]/.test(password));
+  };
+
   return (
     <div className="signup-container">
       <h2>Sign Up</h2>
@@ -63,7 +88,32 @@ const SignUp = () => {
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
 
         <label>Password:</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <input 
+          type="password" 
+          value={password} 
+          onChange={(e) => {
+            setPassword(e.target.value);
+            updatePasswordValidity(e.target.value);
+          }}
+          required 
+        />
+        <div className="password-restrictions">
+          <div className={`restriction-message ${passwordLengthValid ? 'valid' : 'invalid'}`}>
+            {passwordLengthValid ? '✓' : '✕'} Password must be at least 12 characters long.
+          </div>
+          <div className={`restriction-message ${passwordUpperCaseValid ? 'valid' : 'invalid'}`}>
+            {passwordUpperCaseValid ? '✓' : '✕'} Password must contain at least one uppercase letter.
+          </div>
+          <div className={`restriction-message ${passwordNumberValid ? 'valid' : 'invalid'}`}>
+            {passwordNumberValid ? '✓' : '✕'} Password must contain at least one number.
+          </div>
+          <div className={`restriction-message ${passwordSpecialCharValid ? 'valid' : 'invalid'}`}>
+            {passwordSpecialCharValid ? '✓' : '✕'} Password must contain at least one special character (!@#$%^&*).
+          </div>
+        </div>
+
+        <label>Confirm Password:</label>
+        <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
 
         <button type="submit">Sign Up</button>
       </form>
