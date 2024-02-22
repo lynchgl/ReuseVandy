@@ -21,6 +21,7 @@
 .signup-container input[type="email"],
 .signup-container input[type="password"] {
     width: 350px;
+    height: 40px;
     padding: 10px;
     margin-bottom: 16px;
     border: 1px solid #ccc;
@@ -38,12 +39,13 @@
     top: 50%;
     transform: translateY(-50%);
     right: 10px;
-    width: 30px; /* Fixed width for the button */
-    height: 30px; /* Fixed height for the button */
     cursor: pointer;
-    display: flex; /* Add flex display */
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
+    width: 20px;
+    height: 20px;
+    display: flex;
+    padding: 0; /* Remove padding */
+    background-color: transparent; /* Remove background color */
+    border: none; /* Remove border */
 }
 
 .signup-container .password-toggle-icon img {
