@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../services/firebase.config';
 import { Link } from 'react-router-dom';
+import './SignIn.css'; // Import the CSS file for styling
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
@@ -9,29 +10,30 @@ const SignIn = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
-
   const handleSignIn = async (e) => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
       setSuccess('Sign-in successful!'); // Set success message in state
-
-      // TODO: Redirect after successful sign-in
-      
-
     } catch (error) {
       setError(error.message); // Set the error message in state
       console.error('Error signing in:', error.message);
     }
   };
 
-  return (
-    <div>
-      <h2>Sign In</h2>
-      {error && <div style={{ color: 'red' }}>{error}</div>} {/* Display error if exists */}
-      {success && <div style={{ color: 'green' }}>{success}</div>} {/* Display success if exists */}
+  // Render home page if sign-in is successful, redirect to home page
+  if (success) {
+    window.location.href = '/';
+    return null;
+  }
 
-      <form onSubmit={handleSignIn}>
+  return (
+    <div className="signin-container">
+      <h2 className="signin-title">Sign In to Reuse Vandy</h2>
+      {error && <div className="error-message">{error}</div>} {/* Display error if exists */}
+      {success && <div className="success-message">{success}</div>} {/* Display success if exists */}
+
+      <form className="signin-form" onSubmit={handleSignIn}>
         <label>Email:</label>
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
 

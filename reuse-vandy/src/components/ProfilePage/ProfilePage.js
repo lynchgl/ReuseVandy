@@ -1,10 +1,12 @@
 // ProfilePage.js
 import React, { useState, useEffect } from 'react';
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import { dbUsers, auth } from '../services/firebase.config';
+import { dbUsers, auth } from '../../services/firebase.config'
+import { signOut } from 'firebase/auth'
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState(null);
+  const [loggedOut, setLoggedOut] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -31,6 +33,20 @@ const ProfilePage = () => {
     fetchProfile();
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      setLoggedOut(true);
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
+  if (loggedOut) {
+    window.location.href = '/';
+    return null;
+  }
+
   if (!profile) {
     return <div>Loading...</div>;
   }
@@ -48,6 +64,7 @@ const ProfilePage = () => {
       {/* <Link to="/edit-profile">
         <button className="btn btn-primary">Edit Profile</button>
       </Link> */}
+      <button onClick={handleLogout}>Log Out</button>
     </div>
   );
 };

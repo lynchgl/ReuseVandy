@@ -1,7 +1,6 @@
-// src/components/Header.js
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { Link, useLocation } from 'react-router-dom';
+import { onAuthStateChanged } from 'firebase/auth';
 import logo from '../../images/logo.png'
 import shoppingCartIcon from '../../images/shopping cart.png'; // Import shopping cart icon
 import profileIcon from '../../images/profile.png'; // Import profile icon
@@ -10,6 +9,7 @@ import { auth } from '../../services/firebase.config';
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -19,13 +19,8 @@ const Header = () => {
     return () => unsubscribe();
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
-  };
+  // Function to check if the current location is the sign-in page
+  const isSignInPage = () => location.pathname === '/signin';
 
   return (
     <header className="header-container">
@@ -35,23 +30,21 @@ const Header = () => {
         </Link>
       </div>
       <div className="nav-container">
-        <Link to="/cart">
-          <img src={shoppingCartIcon} alt="Shopping Cart" className="icon" />
-        </Link>
-        <Link to={isLoggedIn ? '/profile' : '/signin'}>
-          <img src={profileIcon} alt="Profile" className="icon" />
-        </Link>
-        <nav>
-        <ul>
-        {isLoggedIn ? (
-              <li>
-                <button onClick={handleLogout}>Log Out</button>
-              </li>
-            ) : (
-          <li><Link to="/signin">Sign In</Link></li>
-            )}
-        </ul>
-      </nav>
+        {!isLoggedIn && !isSignInPage() && (
+          <Link to="/signin">
+            <button className="signin-button">Sign In</button>
+          </Link>
+        )}
+        {isLoggedIn && (
+          <>
+            <Link to="/cart">
+              <img src={shoppingCartIcon} alt="Shopping Cart" className="icon" />
+            </Link>
+            <Link to="/profilepage">
+              <img src={profileIcon} alt="Profile" className="icon" />
+            </Link>
+          </>
+        )}
       </div>
     </header>
   );

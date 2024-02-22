@@ -1,9 +1,7 @@
-// profile.js
-
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc, serverTimestamp, updateDoc, doc, getDocs, query, where } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';  // Import necessary storage functions
-import { dbUsers, auth } from '../services/firebase.config';
+import { dbUsers, auth } from '../../services/firebase.config';
 import { Link } from 'react-router-dom';
 
 const Profile = () => {

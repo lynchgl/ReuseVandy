@@ -21,4 +21,18 @@
 .icon {
     width: 40px; /* Adjust the width of the icons */
 }
+
+.signin-button {
+    background-color: #ffd700; /* Yellow background color */
+    color: #000; /* Black text color */
+    padding: 10px 20px; /* Adjust padding */
+    border-radius: 20px; /* Rounded edges */
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Add transition effect */
+}
+
+.signin-button:hover {
+    background-color: #cca300; /* Darker yellow on hover */
+}
   
