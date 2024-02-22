@@ -86,7 +86,6 @@
 
 .signup-container button[type="submit"]:hover {
     background-color: #ffcc00;
-    /* Darker yellow on hover */
 }
 
 .error-message {
