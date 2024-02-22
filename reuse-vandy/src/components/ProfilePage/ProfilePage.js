@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { dbUsers, auth } from '../../services/firebase.config'
 import { signOut } from 'firebase/auth'
+import './ProfilePage.css'
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState(null);
