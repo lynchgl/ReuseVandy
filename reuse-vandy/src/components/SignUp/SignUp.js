@@ -30,6 +30,13 @@ const SignUp = () => {
       return;
     }
 
+    // Check for invalid characters in the password
+    const invalidCharsRegex = /[^A-Za-z\d@$!%*?&\s]/;
+    if (invalidCharsRegex.test(password)) {
+      setError('Password contains invalid characters. Only letters, numbers, and the following special characters are allowed: @$!%*?&');
+      return;
+    }
+
     // Password validation
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/;
     if (!password.match(passwordRegex)) {
