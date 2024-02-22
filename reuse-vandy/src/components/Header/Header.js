@@ -31,7 +31,7 @@ const Header = () => {
         </Link>
       </div>
       <div className="nav-container">
-        {!isLoggedIn && !isSignInPage() && (
+        {!isLoggedIn && !isSignInPage() && !isSignUpPage() && (
           <Link to="/signin">
             <button className="signin-button">Sign In</button>
           </Link>
