@@ -6,22 +6,24 @@ import { Navigate } from 'react-router-dom';
 import './SignUp.css'; // Import SignUp.css file for styling
 
 const SignUp = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(null);
-    const [profileCreated, setProfileCreated] = useState(false);
-    const [passwordLengthValid, setPasswordLengthValid] = useState(false);
-    const [passwordUpperCaseValid, setPasswordUpperCaseValid] = useState(false);
-    const [passwordNumberValid, setPasswordNumberValid] = useState(false);
-    const [passwordSpecialCharValid, setPasswordSpecialCharValid] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [profileCreated, setProfileCreated] = useState(false);
+  const [passwordLengthValid, setPasswordLengthValid] = useState(false);
+  const [passwordUpperCaseValid, setPasswordUpperCaseValid] = useState(false);
+  const [passwordNumberValid, setPasswordNumberValid] = useState(false);
+  const [passwordSpecialCharValid, setPasswordSpecialCharValid] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmedPassword, setShowConfirmedPassword] = useState(false);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
 
-     // Check if email ends with "@vanderbilt.edu"
-     if (!email.endsWith('@vanderbilt.edu')) {
+    // Check if email ends with "@vanderbilt.edu"
+    if (!email.endsWith('@vanderbilt.edu')) {
       setError('Email must end with "@vanderbilt.edu"');
       return;
     }
@@ -54,7 +56,7 @@ const SignUp = () => {
         imageUrl: '',
         timestamp: serverTimestamp(),
       });
-      
+
       setSuccess('Sign-up successful!'); // Set success message in state
       setError(null); // Reset error state
       setProfileCreated(true);
@@ -82,21 +84,30 @@ const SignUp = () => {
       <h2>Sign Up</h2>
       {error && <div className="error-message">{error}</div>} {/* Display error if exists */}
       {success && <div className="success-message">{success}</div>} {/* Display success if exists */}
-      
+
       <form onSubmit={handleSignUp}>
         <label>Email:</label>
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
 
         <label>Password:</label>
-        <input 
-          type="password" 
-          value={password} 
-          onChange={(e) => {
-            setPassword(e.target.value);
-            updatePasswordValidity(e.target.value);
-          }}
-          required 
-        />
+        <div className="password-input-container">
+          <input
+            type={showPassword ? 'text' : 'password'}
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              updatePasswordValidity(e.target.value);
+            }}
+            required
+          />
+          <img
+            src={showPassword ? '/../images/hide password.png' : '/../images/show password.png'}
+            alt={showPassword ? 'Hide' : 'Show'}
+            className="password-toggle-icon"
+            onClick={() => setShowPassword(!showPassword)}
+          />
+        </div>
+
         <div className="password-restrictions">
           <div className={`restriction-message ${passwordLengthValid ? 'valid' : 'invalid'}`}>
             {passwordLengthValid ? '✓' : '✕'} Password must be at least 12 characters long.
@@ -113,7 +124,21 @@ const SignUp = () => {
         </div>
 
         <label>Confirm Password:</label>
-        <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+        <div className="password-input-container">
+          <input
+            type={showConfirmedPassword ? 'text' : 'password'}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+          <button
+            type="button"
+            className="password-toggle-btn"
+            onClick={() => setShowConfirmedPassword(!showConfirmedPassword)}
+          >
+            {showConfirmedPassword ? 'Hide' : 'Show'}
+          </button>
+        </div>
 
         <button type="submit">Sign Up</button>
       </form>
