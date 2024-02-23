@@ -1,20 +1,23 @@
+// Profile.js
 import React, { useState, useEffect } from 'react';
-import { collection, addDoc, serverTimestamp, updateDoc, doc, getDocs, query, where } from 'firebase/firestore';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';  // Import necessary storage functions
+import { collection, query, where, getDocs, doc, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { dbUsers, auth } from '../../services/firebase.config';
 import { Link } from 'react-router-dom';
+import { signOut } from 'firebase/auth'
+import './Profile.css';
+
 
 const Profile = () => {
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [bio, setBio] = useState('');
   const [profileImage, setProfileImage] = useState(null);
-  // eslint-disable-next-line
-  const [userId, setUserId] = useState('');
   const [profileCompleted, setProfileCompleted] = useState(false);
+  const [loggedOut, setLoggedOut] = useState(false);
 
   const collectionRef = collection(dbUsers, 'profiles');
-  const storage = getStorage();  // Create a storage instance
+  const storage = getStorage();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -25,8 +28,6 @@ const Profile = () => {
           return;
         }
 
-        setUserId(user.uid);
-
         // Fetch user profile from Firestore
         const q = query(collectionRef, where('userId', '==', user.uid));
         const querySnapshot = await getDocs(q);
@@ -36,8 +37,8 @@ const Profile = () => {
           setName(profileData.name);
           setAge(profileData.age.toString());
           setBio(profileData.bio);
+          setProfileImage(profileData.imageUrl);
           setProfileCompleted(true);
-          // TODO: set image
         }
       } catch (error) {
         console.error('Error fetching profile:', error);
@@ -108,74 +109,84 @@ const Profile = () => {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      setLoggedOut(true);
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
   return (
-    <div className="profile-container">
+    <div className={profileCompleted ? "profile-page" : "profile-container"}>
       {profileCompleted ? (
-      <div>
-        <h1>Your Profile</h1>
-        <p>Name: {name}</p>
-        <p>Age: {age}</p>
-        <p>Bio: {bio}</p>
-        {/* Add profile image if available */}
-        {/* TODO: Add image display */}
-      </div>
-    ) : (
-      <div>
-      <h1>Fill out your profile</h1>
-      <form onSubmit={submitProfile}>
-        <div className="form-group">
-          <label htmlFor="imageInput">Photo:</label>
-          <input
-            type="file"
-            className="form-control-file"
-            id="imageInput"
-            accept="image/*"
-            onChange={(e) => handleImageUpload(e)}
-          />
+        <div>
+          <h1>Your Profile</h1>
+          <img src={profileImage} alt="Profile" />
+          <p>Name: {name}</p>
+          <p>Age: {age}</p>
+          <p>Bio: {bio}</p>
         </div>
-        <div className="form-group">
-          <label htmlFor="nameInput">Name:</label>
-          <input
-            type="text"
-            className="form-control"
-            id="nameInput"
-            placeholder="Enter your name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="ageInput">Age:</label>
-          <input
-            type="number"
-            className="form-control"
-            id="ageInput"
-            placeholder="Enter your age"
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="bioInput">Bio:</label>
-          <textarea
-            className="form-control"
-            id="bioInput"
-            rows="3"
-            placeholder="Enter your bio"
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-          ></textarea>
-        </div>
-        <button type="submit" className="btn btn-primary">Submit</button>
-      </form>
-      </div>)}
+      ) : (
+        <div>
+          <h1>Fill out your profile</h1>
+          <form onSubmit={submitProfile}>
+            <div className="form-group">
+              <label htmlFor="imageInput">Photo:</label>
+              <input
+                type="file"
+                className="form-control-file"
+                id="imageInput"
+                accept="image/*"
+                onChange={(e) => handleImageUpload(e)}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="nameInput">Name:</label>
+              <input
+                type="text"
+                className="form-control"
+                id="nameInput"
+                placeholder="Enter your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="ageInput">Age:</label>
+              <input
+                type="number"
+                className="form-control"
+                id="ageInput"
+                placeholder="Enter your age"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="bioInput">Bio:</label>
+              <textarea
+                className="form-control"
+                id="bioInput"
+                rows="3"
+                placeholder="Enter your bio"
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+              ></textarea>
+            </div>
+            <button type="submit" className="btn btn-primary">Submit</button>
+          </form>
+        </div>)}
 
       {/* Button to navigate to another page */}
-      <div className="top-right-button">
-        <Link to="/Marketplace">
-          <button className="btn btn-secondary">Go to Marketplace</button>
-        </Link>
-      </div>
+      {profileCompleted && (
+        <div className="top-right-button">
+          <Link to="/marketplace">
+          <button onClick={handleLogout} className="btn btn-secondary">Log Out</button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 };
