@@ -6,6 +6,7 @@ import SellItem from './components/SellItem/SellItem';
 import SignIn from './components/SignIn/SignIn';
 import SignUp from './components/SignUp/SignUp';
 import Profile from './components/Profile/Profile'
+import FurniturePage from './components/FurniturePage/FurniturePage';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/furniture" element={<FurniturePage />} />
       </Routes>
     </div>
   );

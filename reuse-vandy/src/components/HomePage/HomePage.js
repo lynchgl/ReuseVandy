@@ -11,7 +11,7 @@ const Marketplace = () => {
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
-      query(collection(dbMarketplaceListings, 'listings'), orderBy('timestamp', 'desc')), // Apply orderBy here
+      query(collection(dbMarketplaceListings, 'listings'), orderBy('timestamp', 'desc')),
       (snapshot) => {
         const updatedListings = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
         console.log("Updated Listings:", updatedListings);
