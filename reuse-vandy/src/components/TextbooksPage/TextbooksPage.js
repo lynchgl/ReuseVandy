@@ -1,8 +1,14 @@
 import React from 'react';
 import MarketplacePage from '../MarketplacePage/MarketplacePage';
+import NavigationBar from '../NavigationBar/NavigationBar';
 
 const TextbooksPage = () => {
-  return <MarketplacePage category={"Textbooks"}/>
+    return (
+        <>
+          <NavigationBar />
+          <MarketplacePage category={"Textbooks"} />
+        </>
+      );
 };
 
 export default TextbooksPage;

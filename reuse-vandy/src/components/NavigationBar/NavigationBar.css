@@ -21,6 +21,10 @@ nav a:last-child {
     margin-right: 0;
 }
 
+nav a.active {
+    color: #e6b800; /* Change the color to highlight */
+}
+
 .sell-button {
     background-color: #ffd700;
     color: black;
