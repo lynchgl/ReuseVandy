@@ -63,6 +63,8 @@ const MarketplacePage = ({ category }) => {
     try {
       if (window.confirm('Are you sure you want to delete this listing?')) {
         await deleteDoc(doc(dbMarketplaceListings, 'listings', id));
+
+        setListings(prevListings => prevListings.filter(listing => listing.id !== id));
       }
     } catch (err) {
       console.error('Error deleting listing:', err);

@@ -3,7 +3,7 @@ import './HomePage.css';
 import NavigationBar from '../NavigationBar/NavigationBar';
 import MarketplacePage from '../MarketplacePage/MarketplacePage';
 
-const Marketplace = () => {
+const HomePage = () => {
   return (
     <>
       {/* Header */}
@@ -26,4 +26,4 @@ const Marketplace = () => {
   );
 };
 
-export default Marketplace;
+export default HomePage;
