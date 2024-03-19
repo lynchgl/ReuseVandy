@@ -1,15 +1,16 @@
 import React from 'react';
 import EditMarketplaceListing from '../EditMarketplaceListing';
 
-const ListingCard = ({ title, category, price, id, timestamp, userId, userNames, currentUser, onDelete }) => {
-    const categories = ['Home', 'Clothes', 'Books', 'Jewelry', 'Electronics', 'Toys', 'Other'];
+const ListingCard = ({ title, category, price, id, timestamp, userId, userNames, currentUser, onDelete, image }) => {
+    const categories = ['Furniture', 'Decorations', 'Appliances', 'Kitchen', 'Clothing', 'Jewelry', 'Textbooks', 'Other books', 'Technology', 'Other']
     return (
         <div className="col-md-4 mb-3" key={id}>
             <div className="card h-100">
+                {image && <img src={image} className="card-img-top" alt="Listing" />} {/* Render image if it exists */}
                 <div className="card-body d-flex flex-column">
                     <h5 className="card-title">{title}</h5>
                     <p className="card-text">
-                        <strong>Category:</strong> {category}
+                        <strong>Category:</strong> {category} {/* Use category directly */}
                         <br />
                         <strong>Price:</strong> ${price}
                         <br />
@@ -25,7 +26,7 @@ const ListingCard = ({ title, category, price, id, timestamp, userId, userNames,
                             <>
                                 <EditMarketplaceListing
                                     listing={{ title, category, price, id, timestamp }} // Pass the listing object here
-                                    categories={categories}
+                                    categories={categories} // Pass the categories array here
                                 />
                                 <button
                                     type="button"

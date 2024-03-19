@@ -78,7 +78,7 @@ const MarketplacePage = ({ category, searchQuery }) => {
   return (
     <div className="container mt-4">
       <div className="row">
-        {listings.map(({ title, category, price, timestamp, userId, id }) => (
+        {listings.map(({ title, category, price, timestamp, userId, id, imageUrl }) => (
           <div className="col-md-4 mb-3" key={id}>
             <ListingCard
               id={id}
@@ -89,6 +89,7 @@ const MarketplacePage = ({ category, searchQuery }) => {
               userId={userId}
               userNames={userNames}
               currentUser={currentUser}
+              image={imageUrl}
               onDelete={deleteListing} // Pass deleteListing function to ListingCard
             />
           </div>

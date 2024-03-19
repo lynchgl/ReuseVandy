@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { dbMarketplaceListings, auth } from '../../services/firebase.config';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import './SellItem.css';
 
 const SellItemPage = () => {
@@ -9,13 +10,19 @@ const SellItemPage = () => {
   const [category, setCategory] = useState('');
   const [error, setError] = useState('');
   const [selectedMainCategory, setSelectedMainCategory] = useState('');
+  const [image, setImage] = useState(null)
   const categories = [
-    { name: 'Home', subcategories: ['Furniture', 'Decorations', 'Appliances'] },
+    { name: 'Home', subcategories: ['Furniture', 'Decorations', 'Appliances', 'Kitchen'] },
     { name: 'Apparel', subcategories: ['Clothing', 'Jewelry'] },
     { name: 'Books', subcategories: ['Textbooks', 'Other books'] },
     { name: 'Technology', subcategories: [] },
     { name: 'Other', subcategories: [] }
   ];
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+  }
 
   const submitListing = async (e) => {
     e.preventDefault();
@@ -32,17 +39,29 @@ const SellItemPage = () => {
         throw new Error('Please sign in before listing an item.');
       }
 
+      let imageUrl = '';
+      if (image) {
+        const storage = getStorage();
+        const storageRef = ref(storage);
+        const imageRef = ref(storageRef, 'listing_images/${title}-${Date.now()');
+        await uploadBytes(imageRef, image);
+
+        imageUrl = await getDownloadURL(imageRef);
+      }
+
       await addDoc(collection(dbMarketplaceListings, 'listings'), {
         title,
         price: parsedPrice,
         category,
         userId: user.uid, // Associate the listing with the user ID
+        imageUrl,
         timestamp: serverTimestamp(),
       });
       setTitle('');
       setPrice('');
       setCategory('');
       setSelectedMainCategory('');
+      setImage(null);
       setError('');
       window.location.href = '/';
     } catch (err) {
@@ -96,6 +115,16 @@ const SellItemPage = () => {
               </optgroup>
             ))}
           </select>
+        </div>
+        {/* Input field for image upload */}
+        <div className="form-group">
+          <label htmlFor="imageInput">Upload Image:</label>
+          <input
+            type="file"
+            id="imageInput"
+            accept="image/*"
+            onChange={(e) => handleImageUpload(e)}
+          />
         </div>
         <button type="submit">Submit</button>
       </form>
