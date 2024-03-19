@@ -2,7 +2,7 @@ import React from 'react';
 import EditMarketplaceListing from '../EditMarketplaceListing';
 
 const ListingCard = ({ title, category, price, id, timestamp, userId, userNames, currentUser, onDelete }) => {
-    const categories = ['Home', 'Clothes', 'Books', 'Jewelry', 'Electronics', 'Toys', 'Other'];
+    const categories = ['Furniture', 'Clothing', 'Technology', 'Textbooks', 'Other'];
     return (
         <div className="col-md-4 mb-3" key={id}>
             <div className="card h-100">

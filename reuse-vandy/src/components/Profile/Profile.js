@@ -1,12 +1,13 @@
 // Profile.js
 import React, { useState, useEffect } from 'react';
-import { collection, query, where, getDocs, doc, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, updateDoc, deleteDoc, addDoc, serverTimestamp } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { dbUsers, auth } from '../../services/firebase.config';
+import { dbMarketplaceListings, dbUsers, auth } from '../../services/firebase.config';
 import { Link } from 'react-router-dom';
 import { signOut } from 'firebase/auth'
+import ListingCard from '../ListingCard/ListingCard'; // Import the ListingCard component
+import EditMarketplaceListing from '../EditMarketplaceListing'; // Import the EditMarketplaceListing component
 import './Profile.css';
-
 
 const Profile = () => {
   const [name, setName] = useState('');
@@ -15,9 +16,34 @@ const Profile = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [profileCompleted, setProfileCompleted] = useState(false);
   const [loggedOut, setLoggedOut] = useState(false);
-
   const collectionRef = collection(dbUsers, 'profiles');
   const storage = getStorage();
+  const [userListings, setUserListings] = useState([]);
+  const [userNames, setUserNames] = useState({});
+  const [currentUser, setCurrentUser] = useState(null); // Initialize currentUser state
+
+  useEffect(() => {
+    const fetchUserListings = async () => {
+      try {
+        const user = auth.currentUser;
+        if (!user) {
+          // Redirect or handle case where user is not authenticated
+          return;
+        }
+
+        // Fetch user's listings from Firestore
+        const q = query(collection(dbMarketplaceListings, 'listings'), where('userId', '==', user.uid));
+        const querySnapshot = await getDocs(q);
+        const listingsData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+        setUserListings(listingsData);
+      } catch (error) {
+        console.error('Error fetching listings:', error);
+      }
+    };
+
+    fetchUserListings();
+  }, []);
+
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -118,6 +144,16 @@ const Profile = () => {
     }
   };
 
+  const deleteListing = async (id) => {
+    try {
+      if (window.confirm('Are you sure you want to delete this listing?')) {
+        await deleteDoc(doc(dbMarketplaceListings, 'listings', id));
+      }
+    } catch (err) {
+      console.error('Error deleting listing:', err);
+    }
+  };
+
   return (
     <div className={profileCompleted ? "profile-page" : "profile-container"}>
       {profileCompleted ? (
@@ -178,6 +214,45 @@ const Profile = () => {
             <button type="submit" className="btn btn-primary">Submit</button>
           </form>
         </div>)}
+
+      {/* Display user listings */}
+      {profileCompleted && (
+        <div>
+          <h2>Your Listings</h2>
+          <div className="row">
+            {userListings.map(listing => (
+              <div className="col-md-4 mb-3" key={listing.id}>
+                <ListingCard
+                  id={listing.id}
+                  title={listing.title}
+                  category={listing.category}
+                  price={listing.price}
+                  timestamp={listing.timestamp} // Ensure timestamp is passed as a plain object
+                  userId={listing.userId}
+                  userNames={userNames}
+                  currentUser={currentUser}
+                  onDelete={deleteListing} // Pass deleteListing function to ListingCard
+                />
+                {/* Add edit and delete buttons */}
+                {currentUser && currentUser.uid === listing.userId && (
+                  <div>
+                    <EditMarketplaceListing
+                      listing={listing}
+                      categories={['Furniture', 'Clothing', 'Technology', 'Textbooks', 'Other']}
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-danger"
+                      onClick={() => deleteListing(listing.id)}
+                    > Delete
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Button to navigate to another page */}
       {profileCompleted && (

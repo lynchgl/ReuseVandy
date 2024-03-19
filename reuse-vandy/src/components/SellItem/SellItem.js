@@ -8,7 +8,7 @@ const SellItemPage = () => {
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('');
   const [error, setError] = useState('');
-  const categories = ['Home', 'Furniture', 'Clothing', 'Textbooks', 'Jewelry', 'Technology', 'Toys', 'Other'];
+  const categories = ['Furniture', 'Clothing', 'Technology', 'Textbooks', 'Other'];
 
   
   const submitListing = async (e) => {
