@@ -1,4 +1,3 @@
-// EditMarketplaceListing.js
 import React, { useState } from 'react';
 import { doc, updateDoc } from 'firebase/firestore';
 import { dbMarketplaceListings, auth } from '../services/firebase.config';
@@ -17,7 +16,9 @@ const EditMarketplaceListing = ({ listing, categories }) => {
         category: editedListing.category,
       });
 
-      // Close the modal or handle any other necessary actions
+      // Reload the page after saving changes
+      window.location.reload();
+
     } catch (error) {
       console.error('Error updating listing:', error);
     }

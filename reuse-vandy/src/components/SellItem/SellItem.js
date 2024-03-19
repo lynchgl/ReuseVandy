@@ -43,7 +43,7 @@ const SellItemPage = () => {
       if (image) {
         const storage = getStorage();
         const storageRef = ref(storage);
-        const imageRef = ref(storageRef, 'listing_images/${title}-${Date.now()');
+        const imageRef = ref(storageRef, `listing_images/${title}-${Date.now()}`);
         await uploadBytes(imageRef, image);
 
         imageUrl = await getDownloadURL(imageRef);

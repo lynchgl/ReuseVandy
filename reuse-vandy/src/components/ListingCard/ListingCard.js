@@ -1,5 +1,6 @@
 import React from 'react';
 import EditMarketplaceListing from '../EditMarketplaceListing';
+import './ListingCard.css'
 
 const ListingCard = ({ title, category, price, id, timestamp, userId, userNames, currentUser, onDelete, image }) => {
     const categories = ['Furniture', 'Decorations', 'Appliances', 'Kitchen', 'Clothing', 'Jewelry', 'Textbooks', 'Other books', 'Technology', 'Other']
@@ -25,12 +26,12 @@ const ListingCard = ({ title, category, price, id, timestamp, userId, userNames,
                         {currentUser && currentUser.uid === userId && (
                             <>
                                 <EditMarketplaceListing
-                                    listing={{ title, category, price, id, timestamp }} // Pass the listing object here
+                                    listing={{ title, category, price, id, timestamp }}
                                     categories={categories} // Pass the categories array here
                                 />
                                 <button
                                     type="button"
-                                    className="btn btn-danger"
+                                    className = "btn btn-danger btn-action"
                                     onClick={() => onDelete(id)}
                                 >
                                     Delete
