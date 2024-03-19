@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { dbMarketplaceListings, auth } from '../../services/firebase.config';
 import './SellItem.css';
 
@@ -8,9 +8,15 @@ const SellItemPage = () => {
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('');
   const [error, setError] = useState('');
-  const categories = ['Home', 'Furniture', 'Clothing', 'Textbooks', 'Jewelry', 'Technology', 'Toys', 'Other'];
+  const [selectedMainCategory, setSelectedMainCategory] = useState('');
+  const categories = [
+    { name: 'Home', subcategories: ['Furniture', 'Decorations', 'Appliances'] },
+    { name: 'Apparel', subcategories: ['Clothing', 'Jewelry'] },
+    { name: 'Books', subcategories: ['Textbooks', 'Other books'] },
+    { name: 'Technology', subcategories: [] },
+    { name: 'Other', subcategories: [] }
+  ];
 
-  
   const submitListing = async (e) => {
     e.preventDefault();
 
@@ -36,6 +42,8 @@ const SellItemPage = () => {
       setTitle('');
       setPrice('');
       setCategory('');
+      setSelectedMainCategory('');
+      setError('');
       window.location.href = '/';
     } catch (err) {
       console.error('Error adding listing:', err);
@@ -77,8 +85,15 @@ const SellItemPage = () => {
             onChange={(e) => setCategory(e.target.value)}
           >
             <option value="">Select a category</option>
-            {categories.map((category, index) => (
-              <option key={index} value={category}>{category}</option>
+            {categories.map((mainCategory, index) => (
+              <optgroup key={index} label={mainCategory.name}>
+                {mainCategory.subcategories.map((subcategory, subIndex) => (
+                  <option key={subIndex} value={subcategory}>{subcategory}</option>
+                ))}
+                {mainCategory.subcategories.length === 0 && (
+                  <option key={mainCategory.name} value={mainCategory.name}>{mainCategory.name}</option>
+                )}
+              </optgroup>
             ))}
           </select>
         </div>
