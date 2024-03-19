@@ -4,7 +4,7 @@ import { dbMarketplaceListings, dbUsers, auth } from '../../services/firebase.co
 import ListingCard from '../ListingCard/ListingCard';
 import './MarketplacePage.css'; // Import the CSS file for styling
 
-const MarketplacePage = ({ category }) => {
+const MarketplacePage = ({ category, userId }) => {
   const [listings, setListings] = useState([]);
   const [userNames, setUserNames] = useState({});
   const [currentUser, setCurrentUser] = useState(null); // Initialize currentUser state
@@ -16,8 +16,11 @@ const MarketplacePage = ({ category }) => {
         if (category) {
           // If category prop is provided, fetch listings with the specified category
           q = query(collection(dbMarketplaceListings, 'listings'), where('category', '==', category), orderBy('timestamp', 'desc'));
+        } else if (userId) {
+          // If userId prop is provided, fetch listings with the specified userId
+          q = query(collection(dbMarketplaceListings, 'listings'), where('userId', '==', userId), orderBy('timestamp', 'desc'));
         } else {
-          // If category prop is not provided, fetch all listings
+          // If neither category nor userId is provided, fetch all listings
           q = query(collection(dbMarketplaceListings, 'listings'), orderBy('timestamp', 'desc'));
         }
         
@@ -43,7 +46,7 @@ const MarketplacePage = ({ category }) => {
     return () => {
       authUnsubscribe();
     };
-  }, [category]); // Update listings when category changes
+  }, [category, userId]); // Update listings when category or userId changes
 
   const fetchUserNames = async (userIds) => {
     const names = {};

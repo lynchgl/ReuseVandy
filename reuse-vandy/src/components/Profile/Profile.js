@@ -5,9 +5,8 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { dbMarketplaceListings, dbUsers, auth } from '../../services/firebase.config';
 import { Link } from 'react-router-dom';
 import { signOut } from 'firebase/auth'
-import ListingCard from '../ListingCard/ListingCard'; // Import the ListingCard component
-import EditMarketplaceListing from '../EditMarketplaceListing'; // Import the EditMarketplaceListing component
 import './Profile.css';
+import ListingCard from '../ListingCard/ListingCard';
 
 const Profile = () => {
   const [name, setName] = useState('');
@@ -19,8 +18,6 @@ const Profile = () => {
   const collectionRef = collection(dbUsers, 'profiles');
   const storage = getStorage();
   const [userListings, setUserListings] = useState([]);
-  const [userNames, setUserNames] = useState({});
-  const [currentUser, setCurrentUser] = useState(null); // Initialize currentUser state
 
   useEffect(() => {
     const fetchUserListings = async () => {
@@ -163,6 +160,28 @@ const Profile = () => {
           <p>Name: {name}</p>
           <p>Age: {age}</p>
           <p>Bio: {bio}</p>
+
+          {/* Display user's listings */}
+        <h2>Your Listings</h2>
+          <div className="container mt-4">
+            <div className="row">
+              {userListings.map(({ id, title, category, price, timestamp, userId }) => (
+                <div className="col-md-4 mb-3" key={id}>
+                  <ListingCard
+                    id={id}
+                    title={title}
+                    category={category}
+                    price={price}
+                    timestamp={timestamp}
+                    userId={userId}
+                    userNames={{ [userId]: name }} // Pass user's name instead of fetching from userNames
+                    currentUser={auth.currentUser}
+                    onDelete={() => deleteListing(id)}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       ) : (
         <div>
@@ -215,44 +234,7 @@ const Profile = () => {
           </form>
         </div>)}
 
-      {/* Display user listings */}
-      {profileCompleted && (
-        <div>
-          <h2>Your Listings</h2>
-          <div className="row">
-            {userListings.map(listing => (
-              <div className="col-md-4 mb-3" key={listing.id}>
-                <ListingCard
-                  id={listing.id}
-                  title={listing.title}
-                  category={listing.category}
-                  price={listing.price}
-                  timestamp={listing.timestamp} // Ensure timestamp is passed as a plain object
-                  userId={listing.userId}
-                  userNames={userNames}
-                  currentUser={currentUser}
-                  onDelete={deleteListing} // Pass deleteListing function to ListingCard
-                />
-                {/* Add edit and delete buttons */}
-                {currentUser && currentUser.uid === listing.userId && (
-                  <div>
-                    <EditMarketplaceListing
-                      listing={listing}
-                      categories={['Furniture', 'Clothing', 'Technology', 'Textbooks', 'Other']}
-                    />
-                    <button
-                      type="button"
-                      className="btn btn-danger"
-                      onClick={() => deleteListing(listing.id)}
-                    > Delete
-                    </button>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      
 
       {/* Button to navigate to another page */}
       {profileCompleted && (
