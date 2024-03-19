@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { collection, doc, deleteDoc, onSnapshot, orderBy, query, where, getDocs } from 'firebase/firestore';
-import EditMarketplaceListing from '../EditMarketplaceListing';
+import { collection, deleteDoc, doc, onSnapshot, orderBy, query, where, getDocs } from 'firebase/firestore';
 import { dbMarketplaceListings, dbUsers, auth } from '../../services/firebase.config';
-import './HomePage.css'
+import './HomePage.css';
 import NavigationBar from '../NavigationBar/NavigationBar';
+import ListingCard from '../ListingCard/ListingCard';
 
 const Marketplace = () => {
   const [marketplaceListings, setMarketplaceListings] = useState([]);
-  const categories = ['Home', 'Clothes', 'Books', 'Jewelry', 'Electronics', 'Toys', 'Other'];
+  const [userNames, setUserNames] = useState({});
+  const [currentUser, setCurrentUser] = useState(null); // Initialize currentUser state
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -18,13 +19,18 @@ const Marketplace = () => {
         setMarketplaceListings(updatedListings);
       }
     );
-    
+
+    // Set currentUser when auth state changes
+    const authUnsubscribe = auth.onAuthStateChanged(user => {
+      setCurrentUser(user);
+    });
+
     return () => {
       unsubscribe();
+      authUnsubscribe();
     };
   }, []);
-  
-  
+
   const deleteListing = async (id) => {
     try {
       if (window.confirm('Are you sure you want to delete this listing?')) {
@@ -35,10 +41,6 @@ const Marketplace = () => {
     }
   };
 
-  const user = auth.currentUser;
-
-  // fetches usernames for all users that have items listed
-  const [userNames, setUserNames] = useState({});
   const fetchUserNames = async (userIds) => {
     const names = {};
     for (const userId of userIds) {
@@ -77,40 +79,14 @@ const Marketplace = () => {
       {/* Main content */}
       <div className="container mt-4">
         <div className="row">
-          {marketplaceListings.map(({ title, category, price, id, timestamp, userId }) => (
-            <div className="col-md-4 mb-3" key={id}>
-              <div className="card h-100">
-                <div className="card-body d-flex flex-column">
-                  <h5 className="card-title">{title}</h5>
-                  <p className="card-text">
-                    <strong>Category:</strong> {category}
-                    <br />
-                    <strong>Price:</strong> ${price}
-                    <br />
-                    {timestamp && timestamp.seconds && (
-                      <small className="text-muted">
-                        <i>{new Date(timestamp.seconds * 1000).toLocaleString()}</i>
-                      </small>
-                    )}
-                    {userId && userNames[userId] && <p className="text-muted">Listed by: {userNames[userId]}</p>}
-                  </p>
-                  <div className="mt-auto">
-                    {user && user.uid === userId && (
-                      <>
-                    <EditMarketplaceListing listing={{ title, category, price, id, timestamp }} categories={categories} />
-                    <button
-                      type="button"
-                      className="btn btn-danger"
-                      onClick={() => deleteListing(id)}
-                    >
-                      Delete
-                    </button>
-                    </>
-          )}
-                  </div>
-                </div>
-              </div>
-            </div>
+          {marketplaceListings.map((listing) => (
+            <ListingCard
+              key={listing.id}
+              {...listing}
+              userNames={userNames}
+              currentUser={currentUser}
+              onDelete={deleteListing}
+            />
           ))}
         </div>
       </div>

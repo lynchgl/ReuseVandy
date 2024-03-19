@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { collection, onSnapshot, query, where, getDocs } from 'firebase/firestore';
-import { dbMarketplaceListings, dbUsers } from '../../services/firebase.config';
+import { collection, onSnapshot, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { dbMarketplaceListings, dbUsers, auth } from '../../services/firebase.config';
+import ListingCard from '../ListingCard/ListingCard';
 
 const FurniturePage = () => {
   const [furnitureListings, setFurnitureListings] = useState([]);
   const [userNames, setUserNames] = useState({});
+  const [currentUser, setCurrentUser] = useState(null); // Initialize currentUser state
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -18,8 +20,14 @@ const FurniturePage = () => {
       }
     );
 
+    // Set currentUser when auth state changes
+    const authUnsubscribe = auth.onAuthStateChanged(user => {
+      setCurrentUser(user);
+    });
+
     return () => {
       unsubscribe();
+      authUnsubscribe();
     };
   }, []);
 
@@ -37,28 +45,32 @@ const FurniturePage = () => {
     setUserNames(names);
   };
 
+  const deleteListing = async (id) => {
+    try {
+      if (window.confirm('Are you sure you want to delete this listing?')) {
+        await deleteDoc(doc(dbMarketplaceListings, 'listings', id));
+      }
+    } catch (err) {
+      console.error('Error deleting listing:', err);
+    }
+  };
+
   return (
     <div className="container mt-4">
       <div className="row">
-        {furnitureListings.map(({ title, category, price, id, timestamp, userId }) => (
+        {furnitureListings.map(({ title, category, price, timestamp, userId, id }) => (
           <div className="col-md-4 mb-3" key={id}>
-            <div className="card h-100">
-              <div className="card-body d-flex flex-column">
-                <h5 className="card-title">{title}</h5>
-                <p className="card-text">
-                  <strong>Category:</strong> {category}
-                  <br />
-                  <strong>Price:</strong> ${price}
-                  <br />
-                  {timestamp && timestamp.seconds && (
-                    <small className="text-muted">
-                      <i>{new Date(timestamp.seconds * 1000).toLocaleString()}</i>
-                    </small>
-                  )}
-                  {userId && userNames[userId] && <p className="text-muted">Listed by: {userNames[userId]}</p>}
-                </p>
-              </div>
-            </div>
+            <ListingCard
+              id={id}
+              title={title}
+              category={category}
+              price={price}
+              timestamp={timestamp}
+              userId={userId}
+              userNames={userNames}
+              currentUser={currentUser}
+              onDelete={deleteListing} // Pass deleteListing function to ListingCard
+            />
           </div>
         ))}
       </div>
