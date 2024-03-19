@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, query, orderBy, getDocs, deleteDoc, doc, where } from 'firebase/firestore';
 import { dbMarketplaceListings, dbUsers, auth } from '../../services/firebase.config';
 import ListingCard from '../ListingCard/ListingCard';
+import './MarketplacePage.css'
 
 const MarketplacePage = ({ category }) => {
   const [listings, setListings] = useState([]);
