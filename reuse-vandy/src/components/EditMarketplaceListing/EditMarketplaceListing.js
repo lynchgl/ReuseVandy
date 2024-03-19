@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { doc, updateDoc } from 'firebase/firestore';
-import { dbMarketplaceListings, auth } from '../services/firebase.config';
+import { dbMarketplaceListings, auth } from '../../services/firebase.config';
+import './EditMarketplaceListing.css'
 
 const EditMarketplaceListing = ({ listing, categories }) => {
   const [editedListing, setEditedListing] = useState({ ...listing });

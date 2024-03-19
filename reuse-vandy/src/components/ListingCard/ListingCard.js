@@ -1,5 +1,5 @@
 import React from 'react';
-import EditMarketplaceListing from '../EditMarketplaceListing';
+import EditMarketplaceListing from '../EditMarketplaceListing/EditMarketplaceListing';
 import './ListingCard.css'
 
 const ListingCard = ({ title, category, price, id, timestamp, userId, userNames, currentUser, onDelete, image }) => {
