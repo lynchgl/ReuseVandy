@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, query, orderBy, getDocs, deleteDoc, doc, where } from 'firebase/firestore';
 import { dbMarketplaceListings, dbUsers, auth } from '../../services/firebase.config';
 import ListingCard from '../ListingCard/ListingCard';
-import './MarketplacePage.css'
+import './MarketplacePage.css'; // Import the CSS file for styling
 
 const MarketplacePage = ({ category }) => {
   const [listings, setListings] = useState([]);
@@ -15,14 +15,11 @@ const MarketplacePage = ({ category }) => {
         let q;
         if (category) {
           // If category prop is provided, fetch listings with the specified category
-          q = query(collection(dbMarketplaceListings, 'listings'), where('category', '==', category));
+          q = query(collection(dbMarketplaceListings, 'listings'), where('category', '==', category), orderBy('timestamp', 'desc'));
         } else {
           // If category prop is not provided, fetch all listings
           q = query(collection(dbMarketplaceListings, 'listings'), orderBy('timestamp', 'desc'));
         }
-
-        console.log("Category:", category); // Log the category value
-        console.log("Fetching listings...");
         
         const querySnapshot = await getDocs(q);
         const listingsData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
