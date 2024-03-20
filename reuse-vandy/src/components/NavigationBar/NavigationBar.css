@@ -22,10 +22,15 @@ nav {
   
   .dropdown-menu {
     position: absolute;
-    top: 100%; /* Position dropdown menu below the dropdown */
-    right: 0;
+    top: 100%;
+    left: 0; /* Align dropdown menu with the main category */
     display: none;
     z-index: 1000;
+  }
+
+  .subcategory-menu {
+    margin-left: 20px; /* Adjust indentation as needed */
+    min-width: 150px; /* Set a minimum width for better readability */
   }
   
   .dropdown:hover .dropdown-menu {
