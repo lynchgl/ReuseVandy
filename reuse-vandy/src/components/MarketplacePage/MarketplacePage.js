@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, orderBy, where, getDocs } from 'firebase/firestore';
+import { collection, query, orderBy, where, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import { dbMarketplaceListings, dbUsers, auth } from '../../services/firebase.config';
 import ListingCard from '../ListingCard/ListingCard';
 import './MarketplacePage.css';
@@ -76,6 +76,28 @@ const MarketplacePage = ({ categories, searchQuery, currentUserOnly, favorites }
     setUserNames(names);
   };
 
+  const handleDelete = async (listingId) => {
+    try {
+        // Ask for confirmation before deleting
+        const confirmed = window.confirm('Are you sure you want to delete this listing?');
+        if (!confirmed) {
+            return; // User canceled the deletion
+        }
+
+        // Reference to the listing document in Firestore
+        const listingRef = doc(dbMarketplaceListings, 'listings', listingId);
+
+        // Delete the document from Firestore
+        await deleteDoc(listingRef);
+        
+        // Reload the page
+        window.location.reload(true);
+    } catch (error) {
+        console.error('Error deleting listing:', error);
+        // Handle error gracefully (e.g., display an error message to the user)
+    }
+};
+
   return (
     <div className="container mt-4">
       <div className="row">
@@ -91,6 +113,7 @@ const MarketplacePage = ({ categories, searchQuery, currentUserOnly, favorites }
               userNames={userNames}
               currentUser={currentUser}
               image={imageUrl}
+              onDelete={handleDelete}
             />
           </div>
         ))}
