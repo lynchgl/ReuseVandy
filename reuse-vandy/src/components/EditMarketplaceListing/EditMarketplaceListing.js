@@ -1,21 +1,40 @@
 import React, { useState } from 'react';
 import { doc, updateDoc } from 'firebase/firestore';
 import { dbMarketplaceListings, auth } from '../../services/firebase.config';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import './EditMarketplaceListing.css'
 
 const EditMarketplaceListing = ({ listing, categories }) => {
   const [editedListing, setEditedListing] = useState({ ...listing });
+  const [image, setImage] = useState(null)
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+  };
 
   const handleEdit = async (e) => {
     e.preventDefault();
 
     try {
       const documentRef = doc(dbMarketplaceListings, 'listings', listing.id);
-      await updateDoc(documentRef, {
+      const updates = {
         title: editedListing.title,
         price: editedListing.price,
         category: editedListing.category,
-      });
+      };
+
+      // If there's a new image, upload it and update the image URL
+      if (image) {
+        const storage = getStorage();
+        const storageRef = ref(storage);
+        const imageRef = ref(storageRef, `listing_images/${listing.id}-${Date.now()}`);
+        await uploadBytes(imageRef, image);
+        const imageUrl = await getDownloadURL(imageRef);
+        updates.imageUrl = imageUrl;
+      }
+
+      await updateDoc(documentRef, updates);
 
       // Reload the page after saving changes
       window.location.reload();
@@ -83,7 +102,15 @@ const EditMarketplaceListing = ({ listing, categories }) => {
                     ))}
                   </select>
                 </div>
-                {/* Add more input fields for other editable fields */}
+                <div className="mb-3">
+                  <label htmlFor={`priceInput-${listing.id}`} className="form-label">Price:</label>
+                  <input
+                    type="file"
+                    className="form-control"
+                    id={`imageInput-${listing.id}`}
+                    onChange={(e) => handleImageUpload(e)}
+                  />
+                </div>
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
