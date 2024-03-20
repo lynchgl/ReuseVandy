@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { collection, query, orderBy, getDocs, deleteDoc, doc, where } from 'firebase/firestore';
 import { dbMarketplaceListings, dbUsers, auth, db } from '../../services/firebase.config';
 import ListingCard from '../ListingCard/ListingCard';
-import './MarketplacePage.css'; // Import the CSS file for styling
+import './MarketplacePage.css';
 
 const MarketplacePage = ({ category, searchQuery, currentUserOnly }) => {
   const [listings, setListings] = useState([]);
   const [userNames, setUserNames] = useState({});
-  const [currentUser, setCurrentUser] = useState(null); // Initialize currentUser state
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     // Set currentUser when auth state changes
