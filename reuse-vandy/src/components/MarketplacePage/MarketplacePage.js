@@ -56,7 +56,7 @@ const MarketplacePage = ({ category, searchQuery, currentUserOnly }) => {
         if (currentUserOnly) {
           const user = auth.currentUser;
           if (user) {
-            q = query(q, where('userId', '==', user.uid));
+            q = query(q, where('userId', '==', user.uid), orderBy('timestamp', 'desc'));
           }
         }
 
