@@ -25,6 +25,7 @@ const NavigationBar = () => {
   return (
     <nav>
       <div className="nav-links">
+        <Link to="/" className={location.pathname === '/' ? 'active' : ''}>All Listings</Link>
         <div className="dropdown" onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown}>
           <span className="dropdown-toggle">Shop by Category</span>
           {showDropdown && (
