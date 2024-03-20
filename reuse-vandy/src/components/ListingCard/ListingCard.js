@@ -99,6 +99,32 @@ const ListingCard = ({ title, category, price, id, timestamp, userId, userNames,
                             onClick={toggleFavorite}
                         />
                     </div>
+                    <div className="position-absolute bottom-0 start-0 p-2">
+                        <div className="row">
+                            <div className="col-auto me-2">
+                                <button
+                                    type="button"
+                                    className="btn btn-sm"
+                                    style={{
+                                        backgroundColor: '#e6b800'}}
+                                    onClick={() => {}}
+                                >
+                                    Add to Cart
+                                </button>
+                            </div>
+                            <div className="col-auto">
+                                <button
+                                    type="button"
+                                    className="btn btn-sm"
+                                    style={{
+                                        backgroundColor: '#e6b800'}}
+                                    onClick={() => {}}
+                                >
+                                    Contact Seller
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
