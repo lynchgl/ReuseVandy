@@ -1,16 +1,16 @@
 import React from 'react';
 import EditMarketplaceListing from '../EditMarketplaceListing/EditMarketplaceListing';
-import './ListingCard.css'
+import './ListingCard.css';
 
 const ListingCard = ({ title, category, price, id, timestamp, userId, userNames, currentUser, onDelete, image }) => {
-    const categories = ['Furniture', 'Decorations', 'Appliances', 'Kitchen', 'Clothing', 'Jewelry', 'Textbooks', 'Other books', 'Technology', 'Other']
+    const categories = ['Furniture', 'Decorations', 'Appliances', 'Kitchen', 'Clothing', 'Jewelry', 'Textbooks', 'Other books', 'Technology', 'Other'];
     return (
         <div className="col-md-4 mb-3" key={id}>
             <div className="card h-100">
                 {image && <img src={image} className="card-img-top" alt="Listing" />} {/* Render image if it exists */}
                 <div className="card-body d-flex flex-column">
                     <h5 className="card-title">{title}</h5>
-                    <p className="card-text">
+                    <div>
                         <strong>Category:</strong> {category} {/* Use category directly */}
                         <br />
                         <strong>Price:</strong> ${price}
@@ -21,7 +21,7 @@ const ListingCard = ({ title, category, price, id, timestamp, userId, userNames,
                             </small>
                         )}
                         {userId && userNames[userId] && <p className="text-muted">Listed by: {userNames[userId]}</p>}
-                    </p>
+                    </div>
                     <div className="mt-auto">
                         {currentUser && currentUser.uid === userId && (
                             <>
@@ -31,7 +31,7 @@ const ListingCard = ({ title, category, price, id, timestamp, userId, userNames,
                                 />
                                 <button
                                     type="button"
-                                    className = "btn btn-danger btn-action"
+                                    className="btn btn-danger btn-action"
                                     onClick={() => onDelete(id)}
                                 >
                                     Delete

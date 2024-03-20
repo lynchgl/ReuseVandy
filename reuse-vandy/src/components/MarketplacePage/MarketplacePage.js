@@ -10,17 +10,25 @@ const MarketplacePage = ({ category, searchQuery, currentUserOnly }) => {
   const [currentUser, setCurrentUser] = useState(null); // Initialize currentUser state
 
   useEffect(() => {
+    // Set currentUser when auth state changes
+    const authUnsubscribe = auth.onAuthStateChanged(user => {
+      setCurrentUser(user);
+    });
+
     const fetchListings = async () => {
       try {
-        let q;
-        if (category) {
-          // If category prop is provided, fetch listings with the specified category
-          q = query(collection(dbMarketplaceListings, 'listings'), where('category', '==', category), orderBy('timestamp', 'desc'));
-        } else {
-          // If category prop is not provided, fetch all listings
-          q = query(collection(dbMarketplaceListings, 'listings'), orderBy('timestamp', 'desc'));
+        let q = collection(dbMarketplaceListings, 'listings');
+        if (currentUserOnly) {
+          const user = auth.currentUser;
+          if (user) {
+            q = query(q, where('userId', '==', user.uid), orderBy('timestamp', 'desc'));
+          } else if (category) {
+            q = query(q, where('category', '==', category), orderBy('timestamp', 'desc'));
+          } else {
+            q = query(q, orderBy('timestamp', 'desc'))
+          }
         }
-        
+
         const querySnapshot = await getDocs(q);
         const listingsData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
 
@@ -39,37 +47,10 @@ const MarketplacePage = ({ category, searchQuery, currentUserOnly }) => {
     // Call fetchListings when the component mounts
     fetchListings();
 
-    // Set currentUser when auth state changes
-    const authUnsubscribe = auth.onAuthStateChanged(user => {
-      setCurrentUser(user);
-    });
-
     return () => {
       authUnsubscribe();
     };
-  }, [category, searchQuery]); // Update listings when category changes
-
-  useEffect(() => {
-    const fetchListings = async () => {
-      try {
-        let q = collection(dbMarketplaceListings, 'listings');
-        if (currentUserOnly) {
-          const user = auth.currentUser;
-          if (user) {
-            q = query(q, where('userId', '==', user.uid), orderBy('timestamp', 'desc'));
-          }
-        }
-
-        const querySnapshot = await getDocs(q);
-        const listingsData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-        setListings(listingsData);
-      } catch (error) {
-        console.error('Error fetching listings:', error);
-      }
-    };
-
-    fetchListings();
-  }, [currentUserOnly]);
+  }, [category, searchQuery, currentUserOnly]); 
 
   const fetchUserNames = async (userIds) => {
     const names = {};
