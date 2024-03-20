@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, where, getDocs, doc, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, updateDoc, addDoc, serverTimestamp, getDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { dbUsers, auth } from '../../services/firebase.config';
 import { Link } from 'react-router-dom';
 import { signOut } from 'firebase/auth'
 import './Profile.css';
-import MarketplacePage from '../MarketplacePage/MarketplacePage'
+import MarketplacePage from '../MarketplacePage/MarketplacePage';
 
 const Profile = () => {
   const [name, setName] = useState('');
@@ -14,6 +14,7 @@ const Profile = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [profileCompleted, setProfileCompleted] = useState(false);
   const [loggedOut, setLoggedOut] = useState(false);
+  const [favorites, setFavorites] = useState([]); // Add favorites state
   const collectionRef = collection(dbUsers, 'profiles');
   const storage = getStorage();
   const [activeTab, setActiveTab] = useState('listings');
@@ -48,7 +49,30 @@ const Profile = () => {
       }
     };
 
+      const fetchFavorites = async () => {
+        try {
+          const user = auth.currentUser;
+          if (user) {
+            console.log("User:", user);
+            const userRef = doc(dbUsers, 'profiles', user.uid); // Reference to user's profile document
+            console.log("User Ref:", userRef);
+            const userSnapshot = await getDoc(userRef); // Retrieve the profile document
+            console.log("User Snapshot:", userSnapshot);
+            if (userSnapshot.exists()) {
+              const userData = userSnapshot.data(); // Extract user data
+              console.log("User Data:", userData);
+              setFavorites(userData.favorites || []); // Set favorites from user data, or an empty array if not present
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching favorites:', error);
+        }
+      };
+    
+
     fetchProfile();
+    fetchFavorites(); // Call fetchFavorites
+
   }, [collectionRef]);
 
   const handleImageUpload = (e) => {
@@ -154,7 +178,7 @@ const Profile = () => {
               </div>
               <div className="tab-content">
                 {activeTab === 'listings' && <MarketplacePage currentUserOnly />}
-                {activeTab === 'favorites' && <MarketplacePage />} 
+                {activeTab === 'favorites' && <MarketplacePage favorites={favorites} />} 
               </div>
             </>
           ) : (

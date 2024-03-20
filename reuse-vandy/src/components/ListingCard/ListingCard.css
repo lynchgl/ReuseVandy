@@ -1,8 +1,11 @@
+// ListingCard.css
+
 .card {
     border: 1px solid #ccc;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative; /* Add position relative for the parent container */
 }
 
 .card-img-top {
@@ -33,11 +36,11 @@
     font-size: 0.875rem;
 }
 
-.btn-action {
-    width: 100%;
-}
-
-.btn-danger {
-    margin-top: auto;
-    width: 100%;
+.favorite-button {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    cursor: pointer;
 }

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, orderBy, getDocs, deleteDoc, doc, where } from 'firebase/firestore';
-import { dbMarketplaceListings, dbUsers, auth, db } from '../../services/firebase.config';
+import { collection, query, orderBy, where, getDocs } from 'firebase/firestore';
+import { dbMarketplaceListings, dbUsers, auth } from '../../services/firebase.config';
 import ListingCard from '../ListingCard/ListingCard';
 import './MarketplacePage.css';
 
-const MarketplacePage = ({ category, searchQuery, currentUserOnly }) => {
+const MarketplacePage = ({ category, searchQuery, currentUserOnly, favorites }) => {
   const [listings, setListings] = useState([]);
   const [userNames, setUserNames] = useState({});
   const [currentUser, setCurrentUser] = useState(null);
@@ -18,11 +18,19 @@ const MarketplacePage = ({ category, searchQuery, currentUserOnly }) => {
     const fetchListings = async () => {
       try {
         let q = query(collection(dbMarketplaceListings, 'listings'));
+        console.log("Query:", q);
+
         if (currentUserOnly) {
           const user = auth.currentUser;
           if (user) {
             q = query(q, where('userId', '==', user.uid), orderBy('timestamp', 'desc'));
-          } 
+          } else {
+            // Redirect or handle case where user is not authenticated
+            return;
+          }
+        } else if (favorites && favorites.length > 0) {
+          // Ignore favorites if currentUserOnly is true
+          q = query(q, orderBy('timestamp', 'desc'));
         } else if (category) {
           q = query(q, where('category', '==', category), orderBy('timestamp', 'desc'));
         } else {
@@ -30,7 +38,9 @@ const MarketplacePage = ({ category, searchQuery, currentUserOnly }) => {
         }
 
         const querySnapshot = await getDocs(q);
+        console.log("Query Snapshot:", querySnapshot);
         const listingsData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+        console.log("Listings Data:", listingsData);
 
         // Filter listings based on search query
         const filteredListings = searchQuery ? listingsData.filter(listing => listing.title.toLowerCase().includes(searchQuery.toLowerCase())) : listingsData;
@@ -50,7 +60,7 @@ const MarketplacePage = ({ category, searchQuery, currentUserOnly }) => {
     return () => {
       authUnsubscribe();
     };
-  }, [category, searchQuery, currentUserOnly]); 
+  }, [category, searchQuery, currentUserOnly, favorites]); 
 
   const fetchUserNames = async (userIds) => {
     const names = {};
@@ -64,18 +74,6 @@ const MarketplacePage = ({ category, searchQuery, currentUserOnly }) => {
       }
     }
     setUserNames(names);
-  };
-
-  const deleteListing = async (id) => {
-    try {
-      if (window.confirm('Are you sure you want to delete this listing?')) {
-        await deleteDoc(doc(dbMarketplaceListings, 'listings', id));
-
-        setListings(prevListings => prevListings.filter(listing => listing.id !== id));
-      }
-    } catch (err) {
-      console.error('Error deleting listing:', err);
-    }
   };
 
   return (
@@ -93,7 +91,6 @@ const MarketplacePage = ({ category, searchQuery, currentUserOnly }) => {
               userNames={userNames}
               currentUser={currentUser}
               image={imageUrl}
-              onDelete={deleteListing} // Pass deleteListing function to ListingCard
             />
           </div>
         ))}
