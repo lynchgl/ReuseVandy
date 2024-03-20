@@ -9,7 +9,8 @@
     padding: 20px;
     margin-bottom: 20px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 10px;
+    width: 1300px;
 }
 
 .profile-info img {
@@ -21,7 +22,7 @@
 .tabs {
     display: flex;
     justify-content: center; /* Center the tab selection */
-    margin-bottom: 20px;
+    margin-bottom: 0px;
 }
 
 .tabs button {
@@ -31,6 +32,7 @@
     border-radius: 5px 5px 0 0;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    width: 650px;
 }
 
 .tabs button.active {
@@ -40,7 +42,7 @@
 .tab-content {
     background-color: #ffffff;
     padding: 20px;
-    border: 1px solid #ccc;
+    border: none;
     border-top: none;
     border-radius: 0 0 5px 5px;
 }
