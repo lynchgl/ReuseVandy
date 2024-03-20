@@ -43,23 +43,30 @@ const NavigationBar = () => {
           <span className="dropdown-toggle">Shop by Category</span>
           {showDropdown && (
             <div className="dropdown-menu">
-            {categories.map((mainCategory, index) => (
-              <div key={index}>
-                <Link to={`/category?name=${mainCategory.name}`} className={isActiveCategory(mainCategory.name) ? 'active' : ''}>
-                  {mainCategory.name}
-                </Link>
-                {mainCategory.subcategories.length > 0 && (
-                  <div className="subcategory-menu">
-                    {mainCategory.subcategories.map((subcategory, subIndex) => (
-                      <Link key={subIndex} to={`/category?name=${subcategory}`} className={isActiveCategory(subcategory) ? 'active' : ''}>
-                        {subcategory}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+              {categories.map((mainCategory, index) => (
+                <div key={index}>
+                  <Link
+                    to={`/category?name=${mainCategory.name}&categories=${mainCategory.subcategories.join(',')}`}
+                    className={isActiveCategory(mainCategory.name) ? 'active' : ''}
+                  >
+                    {mainCategory.name}
+                  </Link>
+                  {mainCategory.subcategories.length > 0 && (
+                    <div className="subcategory-menu">
+                      {mainCategory.subcategories.map((subcategory, subIndex) => (
+                        <Link
+                          key={subIndex}
+                          to={`/category?name=${subcategory}`}
+                          className={isActiveCategory(subcategory) ? 'active' : ''}
+                        >
+                          {subcategory}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           )}
         </div>
         <Link to="/trending" className={location.pathname === '/trending' ? 'active' : ''}>Trending</Link>

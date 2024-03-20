@@ -4,7 +4,7 @@ import { dbMarketplaceListings, dbUsers, auth } from '../../services/firebase.co
 import ListingCard from '../ListingCard/ListingCard';
 import './MarketplacePage.css';
 
-const MarketplacePage = ({ category, searchQuery, currentUserOnly, favorites }) => {
+const MarketplacePage = ({ categories, searchQuery, currentUserOnly, favorites }) => {
   const [listings, setListings] = useState([]);
   const [userNames, setUserNames] = useState({});
   const [currentUser, setCurrentUser] = useState(null);
@@ -31,8 +31,8 @@ const MarketplacePage = ({ category, searchQuery, currentUserOnly, favorites }) 
         } else if (favorites) {
           // Ignore favorites if currentUserOnly is true
           q = query(collection(dbMarketplaceListings, 'listings'), where('favorites', 'array-contains', user.uid), orderBy('timestamp', 'desc'));
-        } else if (category) {
-          q = query(q, where('category', '==', category), orderBy('timestamp', 'desc'));
+        } else if (categories) {
+          q = query(q, where('category', 'in', categories), orderBy('timestamp', 'desc'));
         } else {
           q = query(q, orderBy('timestamp', 'desc'));
         }
@@ -60,7 +60,7 @@ const MarketplacePage = ({ category, searchQuery, currentUserOnly, favorites }) 
     return () => {
       authUnsubscribe();
     };
-  }, [category, searchQuery, currentUserOnly, favorites]); 
+  }, [categories, searchQuery, currentUserOnly, favorites]); 
 
   const fetchUserNames = async (userIds) => {
     const names = {};
