@@ -121,6 +121,7 @@ const Profile = () => {
     }
   };
 
+  // FIXME - favorites tab currently displays all listings
   return (
     <div className="container">
       <div className="row">
@@ -153,7 +154,7 @@ const Profile = () => {
               </div>
               <div className="tab-content">
                 {activeTab === 'listings' && <MarketplacePage currentUserOnly />}
-                {activeTab === 'favorites' && <MarketplacePage />}
+                {activeTab === 'favorites' && <MarketplacePage />} 
               </div>
             </>
           ) : (
