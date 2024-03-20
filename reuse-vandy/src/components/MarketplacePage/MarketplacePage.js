@@ -4,7 +4,7 @@ import { dbMarketplaceListings, dbUsers, auth } from '../../services/firebase.co
 import ListingCard from '../ListingCard/ListingCard';
 import './MarketplacePage.css'; // Import the CSS file for styling
 
-const MarketplacePage = ({ category, searchQuery }) => {
+const MarketplacePage = ({ category, searchQuery, currentUserOnly }) => {
   const [listings, setListings] = useState([]);
   const [userNames, setUserNames] = useState({});
   const [currentUser, setCurrentUser] = useState(null); // Initialize currentUser state
@@ -48,6 +48,28 @@ const MarketplacePage = ({ category, searchQuery }) => {
       authUnsubscribe();
     };
   }, [category, searchQuery]); // Update listings when category changes
+
+  useEffect(() => {
+    const fetchListings = async () => {
+      try {
+        let q = collection(dbMarketplaceListings, 'listings');
+        if (currentUserOnly) {
+          const user = auth.currentUser;
+          if (user) {
+            q = query(q, where('userId', '==', user.uid));
+          }
+        }
+
+        const querySnapshot = await getDocs(q);
+        const listingsData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+        setListings(listingsData);
+      } catch (error) {
+        console.error('Error fetching listings:', error);
+      }
+    };
+
+    fetchListings();
+  }, [currentUserOnly]);
 
   const fetchUserNames = async (userIds) => {
     const names = {};

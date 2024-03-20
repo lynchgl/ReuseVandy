@@ -1,12 +1,12 @@
 // Profile.js
 import React, { useState, useEffect } from 'react';
-import { collection, query, where, getDocs, doc, updateDoc, deleteDoc, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { dbMarketplaceListings, dbUsers, auth } from '../../services/firebase.config';
+import { dbUsers, auth } from '../../services/firebase.config';
 import { Link } from 'react-router-dom';
 import { signOut } from 'firebase/auth'
 import './Profile.css';
-import ListingCard from '../ListingCard/ListingCard';
+import MarketplacePage from '../MarketplacePage/MarketplacePage'
 
 const Profile = () => {
   const [name, setName] = useState('');
@@ -17,30 +17,6 @@ const Profile = () => {
   const [loggedOut, setLoggedOut] = useState(false);
   const collectionRef = collection(dbUsers, 'profiles');
   const storage = getStorage();
-  const [userListings, setUserListings] = useState([]);
-
-  useEffect(() => {
-    const fetchUserListings = async () => {
-      try {
-        const user = auth.currentUser;
-        if (!user) {
-          // Redirect or handle case where user is not authenticated
-          return;
-        }
-
-        // Fetch user's listings from Firestore
-        const q = query(collection(dbMarketplaceListings, 'listings'), where('userId', '==', user.uid));
-        const querySnapshot = await getDocs(q);
-        const listingsData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-        setUserListings(listingsData);
-      } catch (error) {
-        console.error('Error fetching listings:', error);
-      }
-    };
-
-    fetchUserListings();
-  }, []);
-
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -141,16 +117,6 @@ const Profile = () => {
     }
   };
 
-  const deleteListing = async (id) => {
-    try {
-      if (window.confirm('Are you sure you want to delete this listing?')) {
-        await deleteDoc(doc(dbMarketplaceListings, 'listings', id));
-      }
-    } catch (err) {
-      console.error('Error deleting listing:', err);
-    }
-  };
-
   return (
     <div className={profileCompleted ? "profile-page" : "profile-container"}>
       {profileCompleted ? (
@@ -163,25 +129,7 @@ const Profile = () => {
 
           {/* Display user's listings */}
         <h2>Your Listings</h2>
-          <div className="container mt-4">
-            <div className="row">
-              {userListings.map(({ id, title, category, price, timestamp, userId }) => (
-                <div className="col-md-4 mb-3" key={id}>
-                  <ListingCard
-                    id={id}
-                    title={title}
-                    category={category}
-                    price={price}
-                    timestamp={timestamp}
-                    userId={userId}
-                    userNames={{ [userId]: name }} // Pass user's name instead of fetching from userNames
-                    currentUser={auth.currentUser}
-                    onDelete={() => deleteListing(id)}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
+        <MarketplacePage currentUserOnly />
         </div>
       ) : (
         <div>
