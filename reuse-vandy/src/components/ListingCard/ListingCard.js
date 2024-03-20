@@ -5,10 +5,22 @@ import filledStar from '../../images/filled star.png';
 import { dbMarketplaceListings, auth } from '../../services/firebase.config';
 import './ListingCard.css';
 import EditMarketplaceListing from '../EditMarketplaceListing/EditMarketplaceListing';
+import { Modal, Button } from 'react-bootstrap'; // Import modal components from Bootstrap
+
 
 const ListingCard = ({ title, category, price, id, timestamp, userId, userNames, currentUser, onDelete, image }) => {
     const categories = ['Furniture', 'Decorations', 'Appliances', 'Kitchen', 'Clothing', 'Jewelry', 'Textbooks', 'Other books', 'Technology', 'Other']
     
+    const [showModal, setShowModal] = useState(false);
+
+    const handleContactClick = () => {
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
+
     const [isFavorite, setIsFavorite] = useState(false); // State to track if listing is a favorite
     useEffect(() => {
         const fetchFavoriteStatus = async () => {
@@ -109,12 +121,13 @@ const ListingCard = ({ title, category, price, id, timestamp, userId, userNames,
                                     className="btn btn-sm"
                                     style={{
                                         backgroundColor: '#e6b800'}}
-                                    onClick={() => {}}
+                                        onClick={handleContactClick}
+
                                 >
-                                    Add to Cart
+                                    Contact Seller
                                 </button>
                             </div>
-                            <div className="col-auto">
+                            {/* <div className="col-auto">
                                 <button
                                     type="button"
                                     className="btn btn-sm"
@@ -122,9 +135,9 @@ const ListingCard = ({ title, category, price, id, timestamp, userId, userNames,
                                         backgroundColor: '#e6b800'}}
                                     onClick={() => {}}
                                 >
-                                    Contact Seller
+                                    Add to Cart
                                 </button>
-                            </div>
+                            </div> */}
                         </div>}
     </>
 )}
@@ -132,6 +145,25 @@ const ListingCard = ({ title, category, price, id, timestamp, userId, userNames,
                     </div>
                 </div>
             </div>
+
+            {/* Modal */}
+            <Modal show={showModal} onHide={handleCloseModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Contact Seller</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {/* Add your contact message form or text here */}
+                    <p>Write your message to the seller here.</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseModal}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={handleCloseModal}>
+                        Send Message
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 };
