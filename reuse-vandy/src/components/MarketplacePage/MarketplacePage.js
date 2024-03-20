@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { collection, query, orderBy, getDocs, deleteDoc, doc, where } from 'firebase/firestore';
-import { dbMarketplaceListings, dbUsers, auth } from '../../services/firebase.config';
+import { dbMarketplaceListings, dbUsers, auth, db } from '../../services/firebase.config';
 import ListingCard from '../ListingCard/ListingCard';
 import './MarketplacePage.css'; // Import the CSS file for styling
 
@@ -17,16 +17,16 @@ const MarketplacePage = ({ category, searchQuery, currentUserOnly }) => {
 
     const fetchListings = async () => {
       try {
-        let q = collection(dbMarketplaceListings, 'listings');
+        let q = query(collection(dbMarketplaceListings, 'listings'));
         if (currentUserOnly) {
           const user = auth.currentUser;
           if (user) {
             q = query(q, where('userId', '==', user.uid), orderBy('timestamp', 'desc'));
-          } else if (category) {
-            q = query(q, where('category', '==', category), orderBy('timestamp', 'desc'));
-          } else {
-            q = query(q, orderBy('timestamp', 'desc'))
-          }
+          } 
+        } else if (category) {
+          q = query(q, where('category', '==', category), orderBy('timestamp', 'desc'));
+        } else {
+          q = query(q, orderBy('timestamp', 'desc'));
         }
 
         const querySnapshot = await getDocs(q);
