@@ -20,17 +20,17 @@ const MarketplacePage = ({ category, searchQuery, currentUserOnly, favorites }) 
         let q = query(collection(dbMarketplaceListings, 'listings'));
         console.log("Query:", q);
 
+        const user = auth.currentUser;
         if (currentUserOnly) {
-          const user = auth.currentUser;
           if (user) {
             q = query(q, where('userId', '==', user.uid), orderBy('timestamp', 'desc'));
           } else {
             // Redirect or handle case where user is not authenticated
             return;
           }
-        } else if (favorites && favorites.length > 0) {
+        } else if (favorites) {
           // Ignore favorites if currentUserOnly is true
-          q = query(q, orderBy('timestamp', 'desc'));
+          q = query(collection(dbMarketplaceListings, 'listings'), where('favorites', 'array-contains', user.uid), orderBy('timestamp', 'desc'));
         } else if (category) {
           q = query(q, where('category', '==', category), orderBy('timestamp', 'desc'));
         } else {
