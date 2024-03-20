@@ -1,4 +1,3 @@
-// Profile.js
 import React, { useState, useEffect } from 'react';
 import { collection, query, where, getDocs, doc, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -118,80 +117,79 @@ const Profile = () => {
   };
 
   return (
-    <div className={profileCompleted ? "profile-page" : "profile-container"}>
-      {profileCompleted ? (
-        <div>
-          <h1>Your Profile</h1>
-          <img src={profileImage} alt="Profile" />
-          <p>Name: {name}</p>
-          <p>Age: {age}</p>
-          <p>Bio: {bio}</p>
-
-          {/* Display user's listings */}
-        <h2>Your Listings</h2>
-        <MarketplacePage currentUserOnly />
+    <div className="container">
+      <div className="row">
+        <div className="col-md-12">
+          {profileCompleted ? (
+            <>
+              <div className="profile-info">
+                <h1>Your Profile</h1>
+                <img src={profileImage} alt="Profile" />
+                <p>Name: {name}</p>
+                <p>Age: {age}</p>
+                <p>Bio: {bio}</p>
+                <Link to="/marketplace">
+                  <button onClick={handleLogout} className="btn btn-secondary">Log Out</button>
+                </Link>
+              </div>
+              <div className="listings-section">
+                <h2>Your Listings</h2>
+                <MarketplacePage currentUserOnly />
+              </div>
+            </>
+          ) : (
+            <div>
+              <h1>Fill out your profile</h1>
+              <form onSubmit={submitProfile}>
+                <div className="form-group">
+                  <label htmlFor="imageInput">Photo:</label>
+                  <input
+                    type="file"
+                    className="form-control-file"
+                    id="imageInput"
+                    accept="image/*"
+                    onChange={(e) => handleImageUpload(e)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="nameInput">Name:</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="nameInput"
+                    placeholder="Enter your name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="ageInput">Age:</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="ageInput"
+                    placeholder="Enter your age"
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="bioInput">Bio:</label>
+                  <textarea
+                    className="form-control"
+                    id="bioInput"
+                    rows="3"
+                    placeholder="Enter your bio"
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
+                  ></textarea>
+                </div>
+                <button type="submit" className="btn btn-primary">Submit</button>
+              </form>
+            </div>
+          )}
         </div>
-      ) : (
-        <div>
-          <h1>Fill out your profile</h1>
-          <form onSubmit={submitProfile}>
-            <div className="form-group">
-              <label htmlFor="imageInput">Photo:</label>
-              <input
-                type="file"
-                className="form-control-file"
-                id="imageInput"
-                accept="image/*"
-                onChange={(e) => handleImageUpload(e)}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="nameInput">Name:</label>
-              <input
-                type="text"
-                className="form-control"
-                id="nameInput"
-                placeholder="Enter your name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="ageInput">Age:</label>
-              <input
-                type="number"
-                className="form-control"
-                id="ageInput"
-                placeholder="Enter your age"
-                value={age}
-                onChange={(e) => setAge(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="bioInput">Bio:</label>
-              <textarea
-                className="form-control"
-                id="bioInput"
-                rows="3"
-                placeholder="Enter your bio"
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
-              ></textarea>
-            </div>
-            <button type="submit" className="btn btn-primary">Submit</button>
-          </form>
-        </div>)}
-
-      
-
-      {/* Button to navigate to another page */}
-      {profileCompleted && (
-        <div className="top-right-button">
-          <Link to="/marketplace">
-          <button onClick={handleLogout} className="btn btn-secondary">Log Out</button>
-          </Link>
-        </div>
-      )}
+      </div>
     </div>
   );
 };
