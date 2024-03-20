@@ -1,38 +1,69 @@
-.profile-page {
-    max-width: 600px;
-    margin: 0 auto;
+/* Profile.css */
+
+.container {
+    margin-top: 20px;
+}
+
+.profile-info {
+    background-color: #ffffff;
     padding: 20px;
+    margin-bottom: 20px;
     border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f9f9f9;
+    border-radius: 5px;
 }
-  
-.profile-page h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
-}
-  
-.profile-page img {
-    width: 150px;
-    height: 150px;
+
+.profile-info img {
+    max-width: 100px;
     border-radius: 50%;
-    margin-bottom: 20px;
-}
-  
-.profile-page p {
     margin-bottom: 10px;
 }
-  
-.profile-page button {
-    background-color: #ffd700;
-    color: black;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-weight: bold;
+
+.listings-section {
+    background-color: #ffffff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
+.listings-section h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
 
-  
+.btn-secondary,
+.btn-secondary:focus,
+.btn-secondary:hover,
+.btn-secondary:active,
+.btn-secondary:visited {
+    background-color: #ffd700;
+    color: black;
+    width: 100px;
+    height: 40px;
+    font-weight: bold;
+    border: none;
+
+}
+
+.btn-secondary a {
+    text-decoration: none; /* Remove underline from anchor tag */
+}
+
+.btn-secondary:hover {
+    background-color: #ffcc00;
+    color: black;
+    
+}
+
+/* Set grid layout for listings */
+.listings-section .row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* Three columns with equal width */
+    gap: 20px;
+    /* Gap between columns */
+}
+
+.listings-section .col-md-4 {
+    width: auto;
+    /* Auto width */
+}

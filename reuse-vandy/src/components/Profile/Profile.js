@@ -123,7 +123,7 @@ const Profile = () => {
           {profileCompleted ? (
             <>
               <div className="profile-info">
-                <h1>Your Profile</h1>
+                <h2>Your Profile</h2>
                 <img src={profileImage} alt="Profile" />
                 <p>Name: {name}</p>
                 <p>Age: {age}</p>
