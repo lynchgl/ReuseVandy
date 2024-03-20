@@ -83,7 +83,15 @@ const EditMarketplaceListing = ({ listing, categories }) => {
                     ))}
                   </select>
                 </div>
-                {/* Add more input fields for other editable fields */}
+                <div className="mb-3">
+                  <label htmlFor={`priceInput-${listing.id}`} className="form-label">Price:</label>
+                  <input
+                    type="file"
+                    className="form-control"
+                    id={`imageInput-${listing.id}`}
+                    onChange={(e) => setEditedListing({ ...editedListing, image: parseFloat(e.target.value) })}
+                  />
+                </div>
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
