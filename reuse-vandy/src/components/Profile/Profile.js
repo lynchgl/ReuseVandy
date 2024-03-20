@@ -81,6 +81,7 @@ const Profile = () => {
   };
 
   const submitProfile = async (e) => {
+    console.log('Submit button clicked');
     e.preventDefault();
 
     try {

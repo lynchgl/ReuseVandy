@@ -71,13 +71,18 @@ const SignUp = () => {
       setProfileCreated(true);
 
     } catch (error) {
-      setError(error.message); // Set the error message in state
+      if (error.code === 'auth/email-already-in-use') {
+        setError('Email is already in use. Please sign in instead.'); // Set custom error message
+      } else {
+        setError(error.message); // Set the error message in state for other errors
+      }
       console.error('Error creating user:', error.message);
+      setProfileCreated(false);
     }
     setProfileCreated(true);
   };
 
-  if (profileCreated) {
+  if (profileCreated && !error) {
     return <Navigate to="/profile" />;
   }
 
