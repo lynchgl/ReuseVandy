@@ -16,6 +16,11 @@ const Profile = () => {
   const [loggedOut, setLoggedOut] = useState(false);
   const collectionRef = collection(dbUsers, 'profiles');
   const storage = getStorage();
+  const [activeTab, setActiveTab] = useState('listings');
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+  }
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -132,9 +137,23 @@ const Profile = () => {
                   <button onClick={handleLogout} className="btn btn-secondary">Log Out</button>
                 </Link>
               </div>
-              <div className="listings-section">
-                <h2>Your Listings</h2>
-                <MarketplacePage currentUserOnly />
+              <div className="tabs">
+                <button
+                  className={activeTab === 'listings' ? 'active' : ''}
+                  onClick={() => handleTabChange('listings')}
+                >
+                  Your Listings
+                </button>
+                <button
+                  className={activeTab === 'favorites' ? 'active' : ''}
+                  onClick={() => handleTabChange('favorites')}
+                >
+                  Your Favorites
+                </button>
+              </div>
+              <div className="tab-content">
+                {activeTab === 'listings' && <MarketplacePage currentUserOnly />}
+                {activeTab === 'favorites' && <MarketplacePage />}
               </div>
             </>
           ) : (

@@ -18,52 +18,54 @@
     margin-bottom: 10px;
 }
 
-.listings-section {
-    background-color: #ffffff;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.listings-section h2 {
-    margin-top: 0;
+.tabs {
+    display: flex;
+    justify-content: center; /* Center the tab selection */
     margin-bottom: 20px;
 }
 
-.btn-secondary,
-.btn-secondary:focus,
-.btn-secondary:hover,
-.btn-secondary:active,
-.btn-secondary:visited {
+.tabs button {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px 5px 0 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.tabs button.active {
+    background-color: #ffffff;
+}
+
+.tab-content {
+    background-color: #ffffff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+}
+
+.btn-secondary {
     background-color: #ffd700;
     color: black;
     width: 100px;
     height: 40px;
     font-weight: bold;
     border: none;
-
-}
-
-.btn-secondary a {
-    text-decoration: none; /* Remove underline from anchor tag */
 }
 
 .btn-secondary:hover {
     background-color: #ffcc00;
     color: black;
-    
 }
 
 /* Set grid layout for listings */
 .listings-section .row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    /* Three columns with equal width */
     gap: 20px;
-    /* Gap between columns */
 }
 
 .listings-section .col-md-4 {
     width: auto;
-    /* Auto width */
 }
