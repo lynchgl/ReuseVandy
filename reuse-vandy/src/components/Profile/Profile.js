@@ -1,12 +1,11 @@
-// Profile.js
 import React, { useState, useEffect } from 'react';
-import { collection, query, where, getDocs, doc, updateDoc, deleteDoc, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { dbMarketplaceListings, dbUsers, auth } from '../../services/firebase.config';
+import { dbUsers, auth } from '../../services/firebase.config';
 import { Link } from 'react-router-dom';
 import { signOut } from 'firebase/auth'
 import './Profile.css';
-import ListingCard from '../ListingCard/ListingCard';
+import MarketplacePage from '../MarketplacePage/MarketplacePage'
 
 const Profile = () => {
   const [name, setName] = useState('');
@@ -17,30 +16,11 @@ const Profile = () => {
   const [loggedOut, setLoggedOut] = useState(false);
   const collectionRef = collection(dbUsers, 'profiles');
   const storage = getStorage();
-  const [userListings, setUserListings] = useState([]);
+  const [activeTab, setActiveTab] = useState('listings');
 
-  useEffect(() => {
-    const fetchUserListings = async () => {
-      try {
-        const user = auth.currentUser;
-        if (!user) {
-          // Redirect or handle case where user is not authenticated
-          return;
-        }
-
-        // Fetch user's listings from Firestore
-        const q = query(collection(dbMarketplaceListings, 'listings'), where('userId', '==', user.uid));
-        const querySnapshot = await getDocs(q);
-        const listingsData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-        setUserListings(listingsData);
-      } catch (error) {
-        console.error('Error fetching listings:', error);
-      }
-    };
-
-    fetchUserListings();
-  }, []);
-
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+  }
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -141,109 +121,95 @@ const Profile = () => {
     }
   };
 
-  const deleteListing = async (id) => {
-    try {
-      if (window.confirm('Are you sure you want to delete this listing?')) {
-        await deleteDoc(doc(dbMarketplaceListings, 'listings', id));
-      }
-    } catch (err) {
-      console.error('Error deleting listing:', err);
-    }
-  };
-
+  // FIXME - favorites tab currently displays all listings
   return (
-    <div className={profileCompleted ? "profile-page" : "profile-container"}>
-      {profileCompleted ? (
-        <div>
-          <h1>Your Profile</h1>
-          <img src={profileImage} alt="Profile" />
-          <p>Name: {name}</p>
-          <p>Age: {age}</p>
-          <p>Bio: {bio}</p>
-
-          {/* Display user's listings */}
-        <h2>Your Listings</h2>
-          <div className="container mt-4">
-            <div className="row">
-              {userListings.map(({ id, title, category, price, timestamp, userId }) => (
-                <div className="col-md-4 mb-3" key={id}>
-                  <ListingCard
-                    id={id}
-                    title={title}
-                    category={category}
-                    price={price}
-                    timestamp={timestamp}
-                    userId={userId}
-                    userNames={{ [userId]: name }} // Pass user's name instead of fetching from userNames
-                    currentUser={auth.currentUser}
-                    onDelete={() => deleteListing(id)}
+    <div className="container">
+      <div className="row">
+        <div className="col-md-12">
+          {profileCompleted ? (
+            <>
+              <div className="profile-info">
+                <h2>Your Profile</h2>
+                <img src={profileImage} alt="Profile" />
+                <p>Name: {name}</p>
+                <p>Age: {age}</p>
+                <p>Bio: {bio}</p>
+                <Link to="/marketplace">
+                  <button onClick={handleLogout} className="btn btn-secondary">Log Out</button>
+                </Link>
+              </div>
+              <div className="tabs">
+                <button
+                  className={activeTab === 'listings' ? 'active' : ''}
+                  onClick={() => handleTabChange('listings')}
+                >
+                  Your Listings
+                </button>
+                <button
+                  className={activeTab === 'favorites' ? 'active' : ''}
+                  onClick={() => handleTabChange('favorites')}
+                >
+                  Your Favorites
+                </button>
+              </div>
+              <div className="tab-content">
+                {activeTab === 'listings' && <MarketplacePage currentUserOnly />}
+                {activeTab === 'favorites' && <MarketplacePage />} 
+              </div>
+            </>
+          ) : (
+            <div>
+              <h1>Fill out your profile</h1>
+              <form onSubmit={submitProfile}>
+                <div className="form-group">
+                  <label htmlFor="imageInput">Photo:</label>
+                  <input
+                    type="file"
+                    className="form-control-file"
+                    id="imageInput"
+                    accept="image/*"
+                    onChange={(e) => handleImageUpload(e)}
                   />
                 </div>
-              ))}
+                <div className="form-group">
+                  <label htmlFor="nameInput">Name:</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="nameInput"
+                    placeholder="Enter your name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="ageInput">Age:</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="ageInput"
+                    placeholder="Enter your age"
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="bioInput">Bio:</label>
+                  <textarea
+                    className="form-control"
+                    id="bioInput"
+                    rows="3"
+                    placeholder="Enter your bio"
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
+                  ></textarea>
+                </div>
+                <button type="submit" className="btn btn-primary">Submit</button>
+              </form>
             </div>
-          </div>
+          )}
         </div>
-      ) : (
-        <div>
-          <h1>Fill out your profile</h1>
-          <form onSubmit={submitProfile}>
-            <div className="form-group">
-              <label htmlFor="imageInput">Photo:</label>
-              <input
-                type="file"
-                className="form-control-file"
-                id="imageInput"
-                accept="image/*"
-                onChange={(e) => handleImageUpload(e)}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="nameInput">Name:</label>
-              <input
-                type="text"
-                className="form-control"
-                id="nameInput"
-                placeholder="Enter your name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="ageInput">Age:</label>
-              <input
-                type="number"
-                className="form-control"
-                id="ageInput"
-                placeholder="Enter your age"
-                value={age}
-                onChange={(e) => setAge(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="bioInput">Bio:</label>
-              <textarea
-                className="form-control"
-                id="bioInput"
-                rows="3"
-                placeholder="Enter your bio"
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
-              ></textarea>
-            </div>
-            <button type="submit" className="btn btn-primary">Submit</button>
-          </form>
-        </div>)}
-
-      
-
-      {/* Button to navigate to another page */}
-      {profileCompleted && (
-        <div className="top-right-button">
-          <Link to="/marketplace">
-          <button onClick={handleLogout} className="btn btn-secondary">Log Out</button>
-          </Link>
-        </div>
-      )}
+      </div>
     </div>
   );
 };

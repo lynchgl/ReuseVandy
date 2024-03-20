@@ -1,38 +1,73 @@
-.profile-page {
-    max-width: 600px;
-    margin: 0 auto;
+/* Profile.css */
+
+.container {
+    margin-top: 20px;
+}
+
+.profile-info {
+    background-color: #ffffff;
     padding: 20px;
+    margin-bottom: 20px;
     border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f9f9f9;
+    border-radius: 10px;
+    width: 1300px;
 }
-  
-.profile-page h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
-}
-  
-.profile-page img {
-    width: 150px;
-    height: 150px;
+
+.profile-info img {
+    max-width: 100px;
     border-radius: 50%;
-    margin-bottom: 20px;
-}
-  
-.profile-page p {
     margin-bottom: 10px;
 }
-  
-.profile-page button {
-    background-color: #ffd700;
-    color: black;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-weight: bold;
+
+.tabs {
+    display: flex;
+    justify-content: center; /* Center the tab selection */
+    margin-bottom: 0px;
 }
 
+.tabs button {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px 5px 0 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 650px;
+}
 
-  
+.tabs button.active {
+    background-color: #ffffff;
+}
+
+.tab-content {
+    background-color: #ffffff;
+    padding: 20px;
+    border: none;
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+}
+
+.btn-secondary {
+    background-color: #ffd700;
+    color: black;
+    width: 100px;
+    height: 40px;
+    font-weight: bold;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background-color: #ffcc00;
+    color: black;
+}
+
+/* Set grid layout for listings */
+.listings-section .row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.listings-section .col-md-4 {
+    width: auto;
+}
