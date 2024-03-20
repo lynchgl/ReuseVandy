@@ -100,7 +100,9 @@ const ListingCard = ({ title, category, price, id, timestamp, userId, userNames,
                         />
                     </div>
                     <div className="position-absolute bottom-0 start-0 p-2">
-                        <div className="row">
+                    {currentUser && currentUser.uid !== userId && (
+    <>
+        {  <div className="row">
                             <div className="col-auto me-2">
                                 <button
                                     type="button"
@@ -123,7 +125,10 @@ const ListingCard = ({ title, category, price, id, timestamp, userId, userNames,
                                     Contact Seller
                                 </button>
                             </div>
-                        </div>
+                        </div>}
+    </>
+)}
+                      
                     </div>
                 </div>
             </div>
