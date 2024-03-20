@@ -6,6 +6,7 @@ import './NavigationBar.css'
 
 const NavigationBar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false); // State to control visibility of dropdown
   const location = useLocation();
 
   useEffect(() => {
@@ -16,16 +17,28 @@ const NavigationBar = () => {
     return () => unsubscribe();
   }, []);
 
+  // Function to toggle visibility of dropdown
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+  };
+
   return (
     <nav>
-        <div className="nav-links">
-          <Link to="/trending" className={location.pathname === '/trending' ? 'active' : ''}>Trending</Link>
-          <Link to="/furniture" className={location.pathname === '/furniture' ? 'active' : ''}>Furniture</Link>
-          <Link to="/clothing" className={location.pathname === '/clothing' ? 'active' : ''}>Clothing</Link>
-          <Link to="/technology" className={location.pathname === '/technology' ? 'active' : ''}>Technology</Link>
-          <Link to="/textbooks" className={location.pathname === '/textbooks' ? 'active' : ''}>Textbooks</Link>
+      <div className="nav-links">
+        <div className="dropdown" onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown}>
+          <span className="dropdown-toggle">Shop by Category</span>
+          {showDropdown && (
+            <div className="dropdown-menu">
+              <Link to="/furniture" className={location.pathname === '/furniture' ? 'active' : ''}>Furniture</Link>
+              <Link to="/clothing" className={location.pathname === '/clothing' ? 'active' : ''}>Clothing</Link>
+              <Link to="/technology" className={location.pathname === '/technology' ? 'active' : ''}>Technology</Link>
+              <Link to="/textbooks" className={location.pathname === '/textbooks' ? 'active' : ''}>Textbooks</Link>
+            </div>
+          )}
         </div>
-        {isLoggedIn && <Link to="/sell" className="sell-button">Sell an Item</Link>}
+        <Link to="/trending" className={location.pathname === '/trending' ? 'active' : ''}>Trending</Link>
+      </div>
+      {isLoggedIn && <Link to="/sell" className="sell-button">Sell an Item</Link>}
     </nav>
   );
 };

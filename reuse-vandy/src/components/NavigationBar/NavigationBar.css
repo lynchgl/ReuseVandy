@@ -4,36 +4,80 @@ nav {
     align-items: center;
     padding: 10px 50px;
     background-color: #f8f9fa; 
-}
-
-nav .nav-links {
-    display: flex;
-}
+  }
   
-nav a {
-    text-decoration: none;
+  .nav-links {
+    display: flex;
+  }
+  
+  .dropdown {
+    position: relative;
+    margin-right: 20px; /* Add margin between Shop by Category and Trending */
+  }
+  
+  .dropdown-toggle {
+    cursor: pointer;
+    font-weight: bold; /* Added font weight to match "Trending" */
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    top: 100%; /* Position dropdown menu below the dropdown */
+    right: 0;
+    display: none;
+    z-index: 1000;
+  }
+  
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
+  
+  .dropdown-menu a {
+    display: block;
+    padding: 10px;
+    background-color: #fff;
     color: #333;
-    font-weight: bold;
-    margin-right: 100px;
-}
+    text-decoration: none;
+  }
+  
+  .dropdown-menu a:hover {
+    background-color: #f0f0f0;
+    width: 100%;
+  }
+  
+  .active, .dropdown-menu a.active {
+    color: #e6b800; /* Highlight active links */
+    font-weight: bold; /* Set font weight */
+  }
 
-nav a:last-child {
-    margin-right: 0;
-}
-
-nav a.active {
-    color: #e6b800; /* Change the color to highlight */
-}
-
-.sell-button {
+  .nav-links a.active {
+    color: #e6b800; /* Highlight active links */
+    font-weight: bold; /* Set font weight */
+    text-decoration: none; /* Remove underline */
+  }
+  
+  .nav-links a {
+    text-decoration: none; /* Remove underline */
+    color: #333; /* Set text color */
+    font-weight: bold; /* Set font weight */
+    margin-right: 20px; /* Add margin between links */
+  }
+  
+  .nav-links a:hover {
+    color: #e6b800; /* Change color on hover */
+  }
+  
+  .sell-button {
     background-color: #ffd700;
     color: black;
     padding: 10px 20px;
     border-radius: 20px;
     text-decoration: none;
-}
-
-.sell-button:hover {
+    font-weight: bold;
+  }
+  
+  .sell-button:hover {
     background-color: #ffcc00;
     color: black;
-}
+  }
+  
