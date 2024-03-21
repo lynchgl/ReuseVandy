@@ -1,0 +1,23 @@
+.listing-container {
+    padding-top: 50px;
+    max-width: 1000px; /* Adjust as needed */
+    margin: 0 auto;
+    display: flex;
+}
+
+.image-container {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.listing-image {
+    width: 100%; /* Ensure the image takes up the full width of its container */
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.details-container {
+    flex: 2; /* Adjust the ratio as needed */
+    padding-left: 20px; /* Add space between image and details */
+}
