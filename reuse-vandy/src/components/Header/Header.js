@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import logo from '../../images/logo.png'
-import shoppingCartIcon from '../../images/shopping cart.png'; // Import shopping cart icon
 import profileIcon from '../../images/profile.png'; // Import profile icon
+import reuse from '../../images/reuse.png';
 import './Header.css'
 import { auth } from '../../services/firebase.config';
 
@@ -28,6 +28,7 @@ const Header = () => {
       <div className="logo-container">
         <Link to="/">
           <img src={logo} alt="Logo" className="logo" />
+          <img src={reuse} alt="reuse" className="reuse" />
         </Link>
       </div>
       <div className="nav-container">
@@ -38,9 +39,6 @@ const Header = () => {
         )}
         {isLoggedIn && (
           <>
-            <Link to="/cart">
-              <img src={shoppingCartIcon} alt="Shopping Cart" className="icon" />
-            </Link>
             <Link to="/profile">
               <img src={profileIcon} alt="Profile" className="icon" />
             </Link>

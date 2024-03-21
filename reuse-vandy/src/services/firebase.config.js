@@ -26,10 +26,12 @@ const dbTodos = getFirestore(app);
 // Export the Firestore instance for Profile items
 const dbUsers = getFirestore(app);
 
+const dbProfiles = getFirestore(app);
+
 const auth = getAuth(app);
 
 const db = getFirestore(app);
 
 const storage = getStorage(app);
 
-export { dbMarketplaceListings, dbTodos, dbUsers, auth, db, storage };
+export { dbMarketplaceListings, dbTodos, dbUsers, auth, db, storage, dbProfiles };
