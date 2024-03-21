@@ -15,11 +15,15 @@
 }
   
 .logo {
-    width: 100px; /* Adjust the width of the logo */
+    width: 65px; /* Adjust the width of the logo */
+}
+
+.reuse {
+    width: 100px;
 }
   
 .icon {
-    width: 40px; /* Adjust the width of the icons */
+    width: 60px; /* Adjust the width of the icons */
 }
 
 .signin-button {
