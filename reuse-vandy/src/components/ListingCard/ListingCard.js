@@ -92,11 +92,6 @@ const ListingCard = ({ id, title, category, price, timestamp, userId, userNames,
                             <br />
                             <strong>Price:</strong> ${price}
                             <br />
-                            {timestamp && timestamp.seconds && (
-                                <small className="text-muted">
-                                    <i>{new Date(timestamp.seconds * 1000).toLocaleString()}</i>
-                                </small>
-                            )}
                             {userId && userNames[userId] && <p className="text-muted">Listed by: {userNames[userId]}</p>}
                         </p>
                         <div className="mt-auto">
@@ -143,17 +138,6 @@ const ListingCard = ({ id, title, category, price, timestamp, userId, userNames,
                                                 Contact Seller
                                             </button>
                                         </div>
-                                        {/* <div className="col-auto">
-                                <button
-                                    type="button"
-                                    className="btn btn-sm"
-                                    style={{
-                                        backgroundColor: '#e6b800'}}
-                                    onClick={() => {}}
-                                >
-                                    Add to Cart
-                                </button>
-                            </div> */}
                                     </div>}
                                 </>
                             )}
