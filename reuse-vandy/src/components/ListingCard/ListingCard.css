@@ -22,11 +22,15 @@
 .card-title {
     font-size: 1.25rem;
     margin-bottom: 0.75rem;
+    color: black;
+    text-decoration: none;
 }
 
 .card-text {
     font-size: 1rem;
     margin-bottom: 1rem;
+    color: black;
+    text-decoration: none;
 }
 
 .card-text strong {
@@ -44,4 +48,9 @@
     bottom: 10px;
     right: 10px;
     cursor: pointer;
+}
+
+.card-link {
+    color: inherit; /* Use the inherit color from the parent */
+    text-decoration: none; /* Remove underline */
 }
