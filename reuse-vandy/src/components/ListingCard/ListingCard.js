@@ -92,7 +92,6 @@ const ListingCard = ({ id, title, category, price, timestamp, userId, userNames,
                             <br />
                             <strong>Price:</strong> ${price}
                             <br />
-                            {userId && userNames[userId] && <p className="text-muted">Listed by: {userNames[userId]}</p>}
                         </p>
                         <div className="mt-auto">
                             {currentUser && currentUser.uid === userId && (
