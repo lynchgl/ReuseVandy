@@ -46,6 +46,11 @@ const ListingPage = () => {
         return <div>Listing not found.</div>;
     }
 
+    const formatDate = (timestamp) => {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(timestamp.seconds * 1000).toLocaleDateString('en-US', options);
+    };
+
     return (
         <>
             <NavigationBar />
@@ -57,7 +62,7 @@ const ListingPage = () => {
                     <h2>{listing.title}</h2>
                     <p>Category: {listing.category}</p>
                     <p>Price: ${listing.price}</p>
-                    {/* Add more details here */}
+                    <p>Listed on: {formatDate(listing.timestamp)}</p>
                 </div>
             </div>
         </>
