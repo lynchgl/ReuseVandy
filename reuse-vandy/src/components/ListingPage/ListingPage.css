@@ -21,3 +21,10 @@
     flex: 2; /* Adjust the ratio as needed */
     padding-left: 20px; /* Add space between image and details */
 }
+
+.loading-container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100vh; /* Full height of the viewport */
+}
