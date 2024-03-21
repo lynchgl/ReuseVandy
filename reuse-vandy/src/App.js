@@ -8,6 +8,7 @@ import SignUp from './components/SignUp/SignUp';
 import Profile from './components/Profile/Profile'
 import TrendingPage from './components/TrendingPage/TrendingPage';
 import CategoryPage from './components/CategoryPage/CategoryPage';
+import ListingPage from './components/ListingPage/ListingPage'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/trending" element={<TrendingPage />} />
         <Route path="/category" element={<CategoryPage />} />
+        <Route path="/listing/:id" element={<ListingPage />} />
       </Routes>
     </div>
   );

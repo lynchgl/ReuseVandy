@@ -7,9 +7,10 @@ import { dbMarketplaceListings, auth } from '../../services/firebase.config';
 import './ListingCard.css';
 import EditMarketplaceListing from '../EditMarketplaceListing/EditMarketplaceListing';
 import { Modal, Button } from 'react-bootstrap'; // Import modal components from Bootstrap
+import { Link } from 'react-router-dom'
 
 
-const ListingCard = ({ title, category, price, id, timestamp, userId, userNames, currentUser, onDelete, image }) => {
+const ListingCard = ({ id, title, category, price, timestamp, userId, userNames, currentUser, onDelete, image }) => {
     const categories = ['Furniture', 'Decorations', 'Appliances', 'Kitchen', 'Clothing', 'Jewelry', 'Textbooks', 'Other books', 'Technology', 'Other']
 
     const [showModal, setShowModal] = useState(false);
@@ -81,67 +82,68 @@ const ListingCard = ({ title, category, price, id, timestamp, userId, userNames,
 
     return (
         <div className="col-md-4 mb-3" key={id}>
-            <div className="card h-100">
-                {image && <img src={image} className="card-img-top" alt="Listing" />} {/* Render image if it exists */}
-                <div className="card-body d-flex flex-column">
-                    <h5 className="card-title">{title}</h5>
-                    <p className="card-text">
-                        <strong>Category:</strong> {category} {/* Use category directly */}
-                        <br />
-                        <strong>Price:</strong> ${price}
-                        <br />
-                        {timestamp && timestamp.seconds && (
-                            <small className="text-muted">
-                                <i>{new Date(timestamp.seconds * 1000).toLocaleString()}</i>
-                            </small>
-                        )}
-                        {userId && userNames[userId] && <p className="text-muted">Listed by: {userNames[userId]}</p>}
-                    </p>
-                    <div className="mt-auto">
-                        {currentUser && currentUser.uid === userId && (
-                            <>
-                                <EditMarketplaceListing
-                                    listing={{ title, category, price, id, timestamp }}
-                                    categories={categories} // Pass the categories array here
-                                />
-                                <button
-                                    type="button"
-                                    className="btn btn-danger btn-action"
-                                    onClick={() => onDelete(id)}
-                                >
-                                    Delete
-                                </button>
-                            </>
-                        )}
-                    </div>
-                    {isLoggedIn && (
+            <Link to={`/listing/${id}`} className="card-link">
+                <div className="card h-100">
+                    {image && <img src={image} className="card-img-top" alt="Listing" />} {/* Render image if it exists */}
+                    <div className="card-body d-flex flex-column">
+                        <h5 className="card-title">{title}</h5>
+                        <p className="card-text">
+                            <strong>Category:</strong> {category} {/* Use category directly */}
+                            <br />
+                            <strong>Price:</strong> ${price}
+                            <br />
+                            {timestamp && timestamp.seconds && (
+                                <small className="text-muted">
+                                    <i>{new Date(timestamp.seconds * 1000).toLocaleString()}</i>
+                                </small>
+                            )}
+                            {userId && userNames[userId] && <p className="text-muted">Listed by: {userNames[userId]}</p>}
+                        </p>
                         <div className="mt-auto">
-                            <img
-                                src={isFavorite ? filledStar : blankStar}
-                                alt="Star"
-                                className="favorite-button"
-                                onClick={toggleFavorite}
-                            />
+                            {currentUser && currentUser.uid === userId && (
+                                <>
+                                    <EditMarketplaceListing
+                                        listing={{ title, category, price, id, timestamp }}
+                                        categories={categories} // Pass the categories array here
+                                    />
+                                    <button
+                                        type="button"
+                                        className="btn btn-danger btn-action"
+                                        onClick={() => onDelete(id)}
+                                    >
+                                        Delete
+                                    </button>
+                                </>
+                            )}
                         </div>
-                    )}
-                    <div className="position-absolute bottom-0 start-0 p-2">
-                        {currentUser && currentUser.uid !== userId && (
-                            <>
-                                {<div className="row">
-                                    <div className="col-auto me-2">
-                                        <button
-                                            type="button"
-                                            className="btn btn-sm"
-                                            style={{
-                                                backgroundColor: '#e6b800'
-                                            }}
-                                            onClick={handleContactClick}
+                        {isLoggedIn && (
+                            <div className="mt-auto">
+                                <img
+                                    src={isFavorite ? filledStar : blankStar}
+                                    alt="Star"
+                                    className="favorite-button"
+                                    onClick={toggleFavorite}
+                                />
+                            </div>
+                        )}
+                        <div className="position-absolute bottom-0 start-0 p-2">
+                            {currentUser && currentUser.uid !== userId && (
+                                <>
+                                    {<div className="row">
+                                        <div className="col-auto me-2">
+                                            <button
+                                                type="button"
+                                                className="btn btn-sm"
+                                                style={{
+                                                    backgroundColor: '#e6b800'
+                                                }}
+                                                onClick={handleContactClick}
 
-                                        >
-                                            Contact Seller
-                                        </button>
-                                    </div>
-                                    {/* <div className="col-auto">
+                                            >
+                                                Contact Seller
+                                            </button>
+                                        </div>
+                                        {/* <div className="col-auto">
                                 <button
                                     type="button"
                                     className="btn btn-sm"
@@ -152,32 +154,33 @@ const ListingCard = ({ title, category, price, id, timestamp, userId, userNames,
                                     Add to Cart
                                 </button>
                             </div> */}
-                                </div>}
-                            </>
-                        )}
+                                    </div>}
+                                </>
+                            )}
 
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Modal */}
-            <Modal show={showModal} onHide={handleCloseModal}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Contact Seller</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {/* Add your contact message form or text here */}
-                    <p>Write your message to the seller here.</p>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseModal}>
-                        Close
-                    </Button>
-                    <Button variant="primary" onClick={handleCloseModal}>
-                        Send Message
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+                {/* Modal */}
+                <Modal show={showModal} onHide={handleCloseModal}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Contact Seller</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {/* Add your contact message form or text here */}
+                        <p>Write your message to the seller here.</p>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleCloseModal}>
+                            Close
+                        </Button>
+                        <Button variant="primary" onClick={handleCloseModal}>
+                            Send Message
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            </Link>
         </div>
     );
 };
