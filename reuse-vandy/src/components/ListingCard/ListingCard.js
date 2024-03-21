@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import blankStar from '../../images/empty-star.webp';
 import filledStar from '../../images/filled star.png';
+import { onAuthStateChanged } from 'firebase/auth';
 import { dbMarketplaceListings, auth } from '../../services/firebase.config';
 import './ListingCard.css';
 import EditMarketplaceListing from '../EditMarketplaceListing/EditMarketplaceListing';
@@ -10,8 +11,18 @@ import { Modal, Button } from 'react-bootstrap'; // Import modal components from
 
 const ListingCard = ({ title, category, price, id, timestamp, userId, userNames, currentUser, onDelete, image }) => {
     const categories = ['Furniture', 'Decorations', 'Appliances', 'Kitchen', 'Clothing', 'Jewelry', 'Textbooks', 'Other books', 'Technology', 'Other']
-    
+
     const [showModal, setShowModal] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    // check if user is logged in
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setIsLoggedIn(!!user); // Update the isLoggedIn state based on the user's presence
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     const handleContactClick = () => {
         setShowModal(true);
@@ -95,7 +106,7 @@ const ListingCard = ({ title, category, price, id, timestamp, userId, userNames,
                                 />
                                 <button
                                     type="button"
-                                    className = "btn btn-danger btn-action"
+                                    className="btn btn-danger btn-action"
                                     onClick={() => onDelete(id)}
                                 >
                                     Delete
@@ -103,31 +114,34 @@ const ListingCard = ({ title, category, price, id, timestamp, userId, userNames,
                             </>
                         )}
                     </div>
-                    <div className="mt-auto">
-                        <img
-                            src={isFavorite ? filledStar : blankStar}
-                            alt="Star"
-                            className="favorite-button"
-                            onClick={toggleFavorite}
-                        />
-                    </div>
+                    {isLoggedIn && (
+                        <div className="mt-auto">
+                            <img
+                                src={isFavorite ? filledStar : blankStar}
+                                alt="Star"
+                                className="favorite-button"
+                                onClick={toggleFavorite}
+                            />
+                        </div>
+                    )}
                     <div className="position-absolute bottom-0 start-0 p-2">
-                    {currentUser && currentUser.uid !== userId && (
-    <>
-        {  <div className="row">
-                            <div className="col-auto me-2">
-                                <button
-                                    type="button"
-                                    className="btn btn-sm"
-                                    style={{
-                                        backgroundColor: '#e6b800'}}
-                                        onClick={handleContactClick}
+                        {currentUser && currentUser.uid !== userId && (
+                            <>
+                                {<div className="row">
+                                    <div className="col-auto me-2">
+                                        <button
+                                            type="button"
+                                            className="btn btn-sm"
+                                            style={{
+                                                backgroundColor: '#e6b800'
+                                            }}
+                                            onClick={handleContactClick}
 
-                                >
-                                    Contact Seller
-                                </button>
-                            </div>
-                            {/* <div className="col-auto">
+                                        >
+                                            Contact Seller
+                                        </button>
+                                    </div>
+                                    {/* <div className="col-auto">
                                 <button
                                     type="button"
                                     className="btn btn-sm"
@@ -138,10 +152,10 @@ const ListingCard = ({ title, category, price, id, timestamp, userId, userNames,
                                     Add to Cart
                                 </button>
                             </div> */}
-                        </div>}
-    </>
-)}
-                      
+                                </div>}
+                            </>
+                        )}
+
                     </div>
                 </div>
             </div>
