@@ -79,10 +79,12 @@ const ListingCard = ({ id, title, category, price, userId, currentUser, image })
 
     return (
         <div className="col-md-4 mb-3" key={id}>
-            <Link to={`/listing/${id}`} className="card-link">
-                <div className="card h-100">
+            <div className="card h-100">
+                <Link to={`/listing/${id}`} className="card-link">
                     {image && <img src={image} className="card-img-top" alt="Listing" />} {/* Render image if it exists */}
-                    <div className="card-body d-flex flex-column">
+                </Link>
+                <div className="card-body d-flex flex-column">
+                    <Link to={`/listing/${id}`} className="card-link">
                         <h5 className="card-title">{title}</h5>
                         <p className="card-text">
                             <strong>Category:</strong> {category} {/* Use category directly */}
@@ -90,60 +92,60 @@ const ListingCard = ({ id, title, category, price, userId, currentUser, image })
                             <strong>Price:</strong> ${price}
                             <br />
                         </p>
-                        {isLoggedIn && (
-                            <div className="mt-auto">
-                                <img
-                                    src={isFavorite ? filledStar : blankStar}
-                                    alt="Star"
-                                    className="favorite-button"
-                                    onClick={toggleFavorite}
-                                />
-                            </div>
-                        )}
-                        <div className="position-absolute bottom-0 start-0 p-2">
-                            {currentUser && currentUser.uid !== userId && (
-                                <>
-                                    {<div className="row">
-                                        <div className="col-auto me-2">
-                                            <button
-                                                type="button"
-                                                className="btn btn-sm"
-                                                style={{
-                                                    backgroundColor: '#e6b800'
-                                                }}
-                                                onClick={handleContactClick}
-
-                                            >
-                                                Contact Seller
-                                            </button>
-                                        </div>
-                                    </div>}
-                                </>
-                            )}
-
+                    </Link>
+                    {isLoggedIn && (
+                        <div className="mt-auto">
+                            <img
+                                src={isFavorite ? filledStar : blankStar}
+                                alt="Star"
+                                className="favorite-button"
+                                onClick={toggleFavorite}
+                            />
                         </div>
+                    )}
+                    <div className="position-absolute bottom-0 start-0 p-2">
+                        {currentUser && currentUser.uid !== userId && (
+                            <>
+                                {<div className="row">
+                                    <div className="col-auto me-2">
+                                        <button
+                                            type="button"
+                                            className="btn btn-sm"
+                                            style={{
+                                                backgroundColor: '#e6b800'
+                                            }}
+                                            onClick={handleContactClick}
+
+                                        >
+                                            Contact Seller
+                                        </button>
+                                    </div>
+                                </div>}
+                            </>
+                        )}
+
                     </div>
                 </div>
+            </div>
 
-                {/* Modal */}
-                <Modal show={showModal} onHide={handleCloseModal}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Contact Seller</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        {/* Add your contact message form or text here */}
-                        <p>Write your message to the seller here.</p>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={handleCloseModal}>
-                            Close
-                        </Button>
-                        <Button variant="primary" onClick={handleCloseModal}>
-                            Send Message
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-            </Link>
+            {/* Modal */}
+            <Modal show={showModal} onHide={handleCloseModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Contact Seller</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {/* Add your contact message form or text here */}
+                    <p>Write your message to the seller here.</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseModal}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={handleCloseModal}>
+                        Send Message
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 };
