@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../services/firebase.config';
+import { auth, signInWithGooglePopup } from '../../services/firebase.config';
 import { Link } from 'react-router-dom';
 import './SignIn.css'; // Import the CSS file for styling
 
@@ -21,6 +21,16 @@ const SignIn = () => {
     }
   };
 
+  const logGoogleUser = async () => {
+    try {
+      await signInWithGooglePopup();
+      setSuccess('Sign-in successful!'); // Set success message in state
+    } catch (error) {
+      setError(error.message); // Set the error message in state
+      console.error('Error signing in with Google:', error.message);
+    }
+  };
+
   // Render home page if sign-in is successful, redirect to home page
   if (success) {
     window.location.href = '/';
@@ -32,6 +42,10 @@ const SignIn = () => {
       <h2 className="signin-title">Sign In to Reuse Vandy</h2>
       {error && <div className="error-message">{error}</div>} {/* Display error if exists */}
       {success && <div className="success-message">{success}</div>} {/* Display success if exists */}
+
+      <div>
+        <button onClick={logGoogleUser}>Sign In With Google</button>
+      </div>
 
       <form className="signin-form" onSubmit={handleSignIn}>
         <label>Email:</label>
