@@ -6,14 +6,8 @@ import './MarketplacePage.css';
 
 const MarketplacePage = ({ categories, searchQuery, currentUserOnly, favorites }) => {
   const [listings, setListings] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
-
+  
   useEffect(() => {
-    // Set currentUser when auth state changes
-    const authUnsubscribe = auth.onAuthStateChanged(user => {
-      setCurrentUser(user);
-    });
-
     const fetchListings = async () => {
       try {
         let q = query(collection(dbMarketplaceListings, 'listings'));
@@ -52,24 +46,18 @@ const MarketplacePage = ({ categories, searchQuery, currentUserOnly, favorites }
 
     // Call fetchListings when the component mounts
     fetchListings();
-
-    return () => {
-      authUnsubscribe();
-    };
   }, [categories, searchQuery, currentUserOnly, favorites]); 
 
   return (
     <div className="container mt-4">
       <div className="row">
-        {listings.map(({ title, category, price, userId, id, imageUrl }) => (
+        {listings.map(({ title, category, price, id, imageUrl }) => (
           <div className="col-md-4 mb-3" key={id}>
             <ListingCard
               id={id}
               title={title}
               category={category}
               price={price}
-              userId={userId}
-              currentUser={currentUser}
               image={imageUrl}
             />
           </div>

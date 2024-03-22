@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import Favorites from '../Favorites/Favorites';
 
 
-const ListingCard = ({ id, title, category, price, userId, currentUser, image }) => {
+const ListingCard = ({ id, title, category, price, image }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     // check if user is logged in
