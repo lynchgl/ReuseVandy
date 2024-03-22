@@ -28,3 +28,10 @@
     align-items: center; /* Center vertically */
     height: 100vh; /* Full height of the viewport */
 }
+
+.btn-action,
+.btn-danger {
+    display: block;
+    margin-bottom: 0.5rem;
+    width: 75%
+}

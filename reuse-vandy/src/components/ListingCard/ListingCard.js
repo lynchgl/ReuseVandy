@@ -9,7 +9,7 @@ import { Modal, Button } from 'react-bootstrap'; // Import modal components from
 import { Link } from 'react-router-dom'
 
 
-const ListingCard = ({ id, title, category, price, userId, currentUser, onDelete, image }) => {
+const ListingCard = ({ id, title, category, price, userId, currentUser, image }) => {
     const [showModal, setShowModal] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
