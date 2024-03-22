@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { doc, getDoc, query, collection, where, getDocs, deleteDoc } from 'firebase/firestore';
+import { doc, getDoc, query, collection, where, getDocs, deleteDoc, updateDoc } from 'firebase/firestore';
 import { dbMarketplaceListings, dbProfiles, auth } from '../../services/firebase.config';
 import { useParams } from 'react-router-dom';
 import { Spinner, Modal, Button } from 'react-bootstrap';
@@ -16,6 +16,7 @@ const ListingPage = () => {
     const [userName, setUserName] = useState("");
     const [currentUser, setCurrentUser] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const [isSold, setIsSold] = useState(false);
     const categories = ['Furniture', 'Decorations', 'Appliances', 'Kitchen', 'Clothing', 'Jewelry', 'Textbooks', 'Other books', 'Technology', 'Other']
 
     const handleContactClick = () => {
@@ -56,6 +57,7 @@ const ListingPage = () => {
                 const snapshot = await getDoc(listingRef);
                 if (snapshot.exists()) {
                     setListing(snapshot.data());
+                    setIsSold(snapshot.data().sold);
 
                     const listingData = snapshot.data();
                     const userId = listingData.userId;
@@ -103,6 +105,16 @@ const ListingPage = () => {
             console.error('Error deleting listing:', error);
         }
     }
+
+    const handleToggleSold = async () => {
+        try {
+            const listingRef = doc(dbMarketplaceListings, 'listings', id);
+            await updateDoc(listingRef, { sold: !isSold }); // Toggle the sold status
+            setIsSold(!isSold); // Update the local state
+        } catch (error) {
+            console.error('Error updating sold status:', error);
+        }
+    };
 
     if (loading) {
         return (
@@ -169,6 +181,22 @@ const ListingPage = () => {
                     {/* Edit and Delte buttons */}
                     {currentUser.uid === listing.userId && (
                         <>
+                            <div>
+                                <button
+                                    className="sold-button"
+                                    onClick={handleToggleSold}
+                                    style={{
+                                        backgroundColor: isSold ? '#dc3545' : '#32CD32',
+                                        color: 'white',
+                                        padding: '10px 20px',
+                                        border: 'none',
+                                        borderRadius: '5px',
+                                        cursor: 'pointer',
+                                    }}
+                                >
+                                    {isSold ? 'Sold!' : 'Mark as Sold'}
+                                </button>
+                            </div>
                             <EditMarketplaceListing
                                 listing={{
                                     title: listing.title,
