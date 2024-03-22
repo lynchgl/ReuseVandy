@@ -45,7 +45,7 @@ const ListingCard = ({ id, title, category, price, userId, currentUser, image })
                         </p>
                     </Link>
                     {isLoggedIn && (
-                        <div className="mt-auto">
+                        <div className="favorite-button-container">
                             <Favorites listingId={id} />
                         </div>
                     )}

@@ -128,9 +128,12 @@ const ListingPage = () => {
                     <p>Listed on: {formatDate(listing.timestamp)}</p>
                     <p>Listed By: {userName}</p>
 
-                        <div className="mt-auto">
+                    <div className="mt-auto">
+                        <div className="favorite-button-container-2">
                             <Favorites listingId={id} />
+                            <span>Add to Favorites</span>
                         </div>
+                    </div>
 
                     {/* Edit and Delte buttons */}
                     {currentUser.uid === listing.userId && (

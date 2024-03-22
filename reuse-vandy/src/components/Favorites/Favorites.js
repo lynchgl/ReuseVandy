@@ -3,6 +3,7 @@ import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import blankStar from '../../images/empty-star.webp';
 import filledStar from '../../images/filled star.png';
 import { dbMarketplaceListings, auth } from '../../services/firebase.config';
+import './Favorites.css'
 
 
 const Favorites = ({ listingId }) => {
