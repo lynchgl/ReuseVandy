@@ -1,4 +1,8 @@
 .signin-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center vertically */
     max-width: 400px;
     margin: 0 auto;
     padding: 20px;
@@ -26,6 +30,7 @@
 .signin-form label {
     display: block;
     margin-bottom: 10px;
+    width: 350px;
 }
   
 .signin-form input {
@@ -63,4 +68,10 @@
 .signin-form p a:hover {
     text-decoration: underline;
 }
+
+.google-signin-image {
+    width: 200px; 
+    height: auto;
+    cursor: pointer;
+  }
   

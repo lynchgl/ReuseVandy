@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, signInWithGooglePopup } from '../../services/firebase.config';
 import { Link } from 'react-router-dom';
+import googleSignIn from '../../images/google-signin.png'
 import './SignIn.css'; // Import the CSS file for styling
 
 const SignIn = () => {
@@ -44,7 +45,12 @@ const SignIn = () => {
       {success && <div className="success-message">{success}</div>} {/* Display success if exists */}
 
       <div>
-        <button onClick={logGoogleUser}>Sign In With Google</button>
+        <img 
+          className='google-signin-image'
+          src={googleSignIn} 
+          alt="Sign in with Google" 
+          onClick={logGoogleUser} 
+        />
       </div>
 
       <form className="signin-form" onSubmit={handleSignIn}>
