@@ -4,7 +4,7 @@ import { dbMarketplaceListings, auth } from '../../services/firebase.config';
 import ListingCard from '../ListingCard/ListingCard';
 import './MarketplacePage.css';
 
-const MarketplacePage = ({ categories, searchQuery, currentUserOnly, favorites }) => {
+const MarketplacePage = ({ categories, searchQuery, currentUserOnly, favorites, trending }) => {
   const [listings, setListings] = useState([]);
   
   useEffect(() => {
@@ -18,11 +18,9 @@ const MarketplacePage = ({ categories, searchQuery, currentUserOnly, favorites }
           if (user) {
             q = query(q, where('userId', '==', user.uid), orderBy('timestamp', 'desc'));
           } else {
-            // Redirect or handle case where user is not authenticated
             return;
           }
         } else if (favorites) {
-          // Ignore favorites if currentUserOnly is true
           q = query(collection(dbMarketplaceListings, 'listings'), where('favorites', 'array-contains', user.uid), orderBy('timestamp', 'desc'));
         } else if (categories) {
           q = query(q, where('category', 'in', categories), orderBy('timestamp', 'desc'));
@@ -35,10 +33,15 @@ const MarketplacePage = ({ categories, searchQuery, currentUserOnly, favorites }
         const listingsData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
         console.log("Listings Data:", listingsData);
 
-        // Filter listings based on search query
-        const filteredListings = searchQuery ? listingsData.filter(listing => listing.title.toLowerCase().includes(searchQuery.toLowerCase())) : listingsData;
+        // filter trending lists
+        console.log("Trending: ", trending);
+        const filteredListings = trending ? listingsData.filter(listing => (listing.favorites && listing.favorites.length >= 5)) : listingsData;
+        console.log("Trending listings: ", filteredListings)
 
-        setListings(filteredListings);
+        // filter search query listings
+        const filteredListingsWithSearch = searchQuery ? filteredListings.filter(listing => listing.title.toLowerCase().includes(searchQuery.toLowerCase())) : filteredListings;
+
+        setListings(filteredListingsWithSearch);
       } catch (error) {
         console.error('Error fetching listings:', error);
       }
@@ -46,7 +49,7 @@ const MarketplacePage = ({ categories, searchQuery, currentUserOnly, favorites }
 
     // Call fetchListings when the component mounts
     fetchListings();
-  }, [categories, searchQuery, currentUserOnly, favorites]); 
+  }, [categories, searchQuery, currentUserOnly, favorites, trending]); 
 
   return (
     <div className="container mt-4">
