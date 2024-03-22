@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';
 import NavigationBar from '../NavigationBar/NavigationBar';
 import EditMarketplaceListing from '../EditMarketplaceListing/EditMarketplaceListing';
+import Favorites from '../Favorites/Favorites'
 import './ListingPage.css'
 
 
@@ -126,6 +127,10 @@ const ListingPage = () => {
                     <p>Price: ${listing.price}</p>
                     <p>Listed on: {formatDate(listing.timestamp)}</p>
                     <p>Listed By: {userName}</p>
+
+                        <div className="mt-auto">
+                            <Favorites listingId={id} />
+                        </div>
 
                     {/* Edit and Delte buttons */}
                     {currentUser.uid === listing.userId && (
