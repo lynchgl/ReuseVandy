@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { doc, getDoc, query, collection, where, getDocs } from 'firebase/firestore';
+import { doc, getDoc, query, collection, where, getDocs, deleteDoc } from 'firebase/firestore';
 import { dbMarketplaceListings, dbProfiles, auth } from '../../services/firebase.config';
 import { useParams } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';
@@ -69,9 +69,30 @@ const ListingPage = () => {
 
         return () => {
             authUnsubscribe();
-          };
+        };
 
     }, [id]);
+
+    const handleDelete = async (listingId) => {
+        try {
+            // Ask for confirmation before deleting
+            const confirmed = window.confirm('Are you sure you want to delete this listing?');
+            if (!confirmed) {
+                return; // User canceled the deletion
+            }
+
+            // Reference to the listing document in Firestore
+            const listingRef = doc(dbMarketplaceListings, 'listings', listingId);
+
+            // Delete the document from Firestore
+            await deleteDoc(listingRef);
+
+            // Reload the page
+            window.location.href = '/';
+        } catch (error) {
+            console.error('Error deleting listing:', error);
+        }
+    }
 
     if (loading) {
         return (
@@ -110,15 +131,22 @@ const ListingPage = () => {
                     {currentUser.uid === listing.userId && (
                         <>
                             <EditMarketplaceListing
-                                listing={{ 
-                                    title: listing.title, 
-                                    category: listing.category, 
-                                    price: listing.price, 
+                                listing={{
+                                    title: listing.title,
+                                    category: listing.category,
+                                    price: listing.price,
                                     id: id,
                                     timestamp: listing.timestamp
                                 }}
                                 categories={categories}
                             />
+                            <button
+                                type="button"
+                                className="btn btn-danger btn-action"
+                                onClick={() => handleDelete(id)}
+                            >
+                                Delete
+                            </button>
                         </>
                     )}
                 </div>

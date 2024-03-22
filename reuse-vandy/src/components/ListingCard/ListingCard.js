@@ -5,14 +5,11 @@ import filledStar from '../../images/filled star.png';
 import { onAuthStateChanged } from 'firebase/auth';
 import { dbMarketplaceListings, auth } from '../../services/firebase.config';
 import './ListingCard.css';
-import EditMarketplaceListing from '../EditMarketplaceListing/EditMarketplaceListing';
 import { Modal, Button } from 'react-bootstrap'; // Import modal components from Bootstrap
 import { Link } from 'react-router-dom'
 
 
-const ListingCard = ({ id, title, category, price, timestamp, userId, userNames, currentUser, onDelete, image }) => {
-    const categories = ['Furniture', 'Decorations', 'Appliances', 'Kitchen', 'Clothing', 'Jewelry', 'Textbooks', 'Other books', 'Technology', 'Other']
-
+const ListingCard = ({ id, title, category, price, userId, currentUser, onDelete, image }) => {
     const [showModal, setShowModal] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -93,19 +90,6 @@ const ListingCard = ({ id, title, category, price, timestamp, userId, userNames,
                             <strong>Price:</strong> ${price}
                             <br />
                         </p>
-                        <div className="mt-auto">
-                            {currentUser && currentUser.uid === userId && (
-                                <>
-                                    <button
-                                        type="button"
-                                        className="btn btn-danger btn-action"
-                                        onClick={() => onDelete(id)}
-                                    >
-                                        Delete
-                                    </button>
-                                </>
-                            )}
-                        </div>
                         {isLoggedIn && (
                             <div className="mt-auto">
                                 <img
