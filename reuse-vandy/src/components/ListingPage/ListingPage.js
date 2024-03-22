@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { doc, getDoc, query, collection, where, getDocs } from 'firebase/firestore';
-import { dbMarketplaceListings, dbProfiles } from '../../services/firebase.config';
+import { dbMarketplaceListings, dbProfiles, auth } from '../../services/firebase.config';
 import { useParams } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';
 import NavigationBar from '../NavigationBar/NavigationBar';
+import EditMarketplaceListing from '../EditMarketplaceListing/EditMarketplaceListing';
 import './ListingPage.css'
 
 
@@ -12,8 +13,14 @@ const ListingPage = () => {
     const [listing, setListing] = useState(null);
     const [loading, setLoading] = useState(true);
     const [userName, setUserName] = useState("");
+    const [currentUser, setCurrentUser] = useState(null);
+    const categories = ['Furniture', 'Decorations', 'Appliances', 'Kitchen', 'Clothing', 'Jewelry', 'Textbooks', 'Other books', 'Technology', 'Other']
 
     useEffect(() => {
+        const authUnsubscribe = auth.onAuthStateChanged(user => {
+            setCurrentUser(user);
+        });
+
         const fetchUserName = async (userId) => {
             try {
                 const q = query(collection(dbProfiles, 'profiles'), where('userId', '==', userId));
@@ -31,7 +38,7 @@ const ListingPage = () => {
                 return null;
             }
         };
-        
+
 
         const fetchListing = async () => {
             try {
@@ -42,7 +49,7 @@ const ListingPage = () => {
 
                     const listingData = snapshot.data();
                     const userId = listingData.userId;
-        
+
                     // Fetch user's name using the userId
                     const userName = await fetchUserName(userId);
                     if (userName !== null) {
@@ -59,6 +66,10 @@ const ListingPage = () => {
         };
 
         fetchListing();
+
+        return () => {
+            authUnsubscribe();
+          };
 
     }, [id]);
 
@@ -94,6 +105,22 @@ const ListingPage = () => {
                     <p>Price: ${listing.price}</p>
                     <p>Listed on: {formatDate(listing.timestamp)}</p>
                     <p>Listed By: {userName}</p>
+
+                    {/* Edit and Delte buttons */}
+                    {currentUser.uid === listing.userId && (
+                        <>
+                            <EditMarketplaceListing
+                                listing={{ 
+                                    title: listing.title, 
+                                    category: listing.category, 
+                                    price: listing.price, 
+                                    id: id,
+                                    timestamp: listing.timestamp
+                                }}
+                                categories={categories}
+                            />
+                        </>
+                    )}
                 </div>
             </div>
         </>

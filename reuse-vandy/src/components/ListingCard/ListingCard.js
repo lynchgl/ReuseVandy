@@ -96,10 +96,6 @@ const ListingCard = ({ id, title, category, price, timestamp, userId, userNames,
                         <div className="mt-auto">
                             {currentUser && currentUser.uid === userId && (
                                 <>
-                                    <EditMarketplaceListing
-                                        listing={{ title, category, price, id, timestamp }}
-                                        categories={categories} // Pass the categories array here
-                                    />
                                     <button
                                         type="button"
                                         className="btn btn-danger btn-action"
