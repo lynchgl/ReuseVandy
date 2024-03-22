@@ -28,3 +28,38 @@
     align-items: center; /* Center vertically */
     height: 100vh; /* Full height of the viewport */
 }
+
+.btn-action,
+.btn-danger {
+    display: block;
+    margin-bottom: 0.5rem;
+    width: 75%
+}
+
+.favorite-button-container-2 {
+    width: 20px;
+    height: 20px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.favorite-button-container-2 span {
+    margin-left: 5px;
+    white-space: nowrap;
+}
+
+.sold-button {
+    margin-bottom: 10px;
+}
+
+.sold-indicator {
+    background-color: #dc3545;
+    color: white;
+    width: auto;
+    height: 25px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

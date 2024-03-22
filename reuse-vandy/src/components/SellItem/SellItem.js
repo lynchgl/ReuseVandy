@@ -56,6 +56,7 @@ const SellItemPage = () => {
         userId: user.uid, // Associate the listing with the user ID
         imageUrl,
         timestamp: serverTimestamp(),
+        sold: false,
       });
       setTitle('');
       setPrice('');

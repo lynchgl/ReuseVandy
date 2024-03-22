@@ -114,7 +114,7 @@ const EditMarketplaceListing = ({ listing, categories }) => {
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" className="btn btn-primary">Save Changes</button>
+                <button type="submit" className="btn btn-secondary">Save Changes</button>
               </div>
             </div>
           </form>

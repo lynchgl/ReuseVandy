@@ -1,6 +1,4 @@
  
- /*ListingCard.css*/
-
 .card {
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -41,16 +39,15 @@
     font-size: 0.875rem;
 }
 
-.favorite-button {
+.card-link {
+    color: inherit; /* Use the inherit color from the parent */
+    text-decoration: none; /* Remove underline */
+}
+
+.favorite-button-container {
     width: 20px;
     height: 20px;
     position: absolute;
     bottom: 10px;
     right: 10px;
-    cursor: pointer;
-}
-
-.card-link {
-    color: inherit; /* Use the inherit color from the parent */
-    text-decoration: none; /* Remove underline */
 }
