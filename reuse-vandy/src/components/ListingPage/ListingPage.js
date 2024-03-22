@@ -144,6 +144,7 @@ const ListingPage = () => {
                 </div>
                 <div className="details-container">
                     <h2>{listing.title}</h2>
+                    {listing.sold && <p className="sold-indicator">This item has been sold</p>}
                     <p>Category: {listing.category}</p>
                     <p>Price: ${listing.price}</p>
                     <p>Listed on: {formatDate(listing.timestamp)}</p>

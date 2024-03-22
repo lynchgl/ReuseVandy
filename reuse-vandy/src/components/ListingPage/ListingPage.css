@@ -52,3 +52,14 @@
 .sold-button {
     margin-bottom: 10px;
 }
+
+.sold-indicator {
+    background-color: #dc3545;
+    color: white;
+    width: auto;
+    height: 25px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

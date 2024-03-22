@@ -23,9 +23,9 @@ const MarketplacePage = ({ categories, searchQuery, currentUserOnly, favorites, 
         } else if (favorites) {
           q = query(collection(dbMarketplaceListings, 'listings'), where('favorites', 'array-contains', user.uid), orderBy('timestamp', 'desc'));
         } else if (categories) {
-          q = query(q, where('category', 'in', categories), orderBy('timestamp', 'desc'));
+          q = query(q, where('category', 'in', categories), where('sold', '==', false), orderBy('timestamp', 'desc'));
         } else {
-          q = query(q, orderBy('timestamp', 'desc'));
+          q = query(q, orderBy('timestamp', 'desc'), where('sold', '==', false));
         }
 
         const querySnapshot = await getDocs(q);
