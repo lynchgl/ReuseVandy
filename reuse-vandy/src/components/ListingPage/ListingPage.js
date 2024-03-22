@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { doc, getDoc, query, collection, where, getDocs, deleteDoc } from 'firebase/firestore';
 import { dbMarketplaceListings, dbProfiles, auth } from '../../services/firebase.config';
 import { useParams } from 'react-router-dom';
-import { Spinner } from 'react-bootstrap';
+import { Spinner, Modal, Button } from 'react-bootstrap';
 import NavigationBar from '../NavigationBar/NavigationBar';
 import EditMarketplaceListing from '../EditMarketplaceListing/EditMarketplaceListing';
 import Favorites from '../Favorites/Favorites'
@@ -15,7 +15,16 @@ const ListingPage = () => {
     const [loading, setLoading] = useState(true);
     const [userName, setUserName] = useState("");
     const [currentUser, setCurrentUser] = useState(null);
+    const [showModal, setShowModal] = useState(false);
     const categories = ['Furniture', 'Decorations', 'Appliances', 'Kitchen', 'Clothing', 'Jewelry', 'Textbooks', 'Other books', 'Technology', 'Other']
+
+    const handleContactClick = () => {
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
 
     useEffect(() => {
         const authUnsubscribe = auth.onAuthStateChanged(user => {
@@ -135,6 +144,28 @@ const ListingPage = () => {
                         </div>
                     </div>
 
+                    <div className="mt-auto">
+                        {currentUser && currentUser.uid !== listing.userId && (
+                            <>
+                                {<div className="row">
+                                    <div className="col-auto me-2">
+                                        <button
+                                            type="button"
+                                            className="btn btn-sm"
+                                            style={{
+                                                backgroundColor: '#e6b800'
+                                            }}
+                                            onClick={handleContactClick}
+
+                                        >
+                                            Contact Seller
+                                        </button>
+                                    </div>
+                                </div>}
+                            </>
+                        )}
+                    </div>
+
                     {/* Edit and Delte buttons */}
                     {currentUser.uid === listing.userId && (
                         <>
@@ -158,6 +189,24 @@ const ListingPage = () => {
                         </>
                     )}
                 </div>
+                {/* Modal */}
+                <Modal show={showModal} onHide={handleCloseModal}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Contact Seller</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {/* Add your contact message form or text here */}
+                        <p>Write your message to the seller here.</p>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleCloseModal}>
+                            Close
+                        </Button>
+                        <Button variant="primary" onClick={handleCloseModal}>
+                            Send Message
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
             </div>
         </>
     );
