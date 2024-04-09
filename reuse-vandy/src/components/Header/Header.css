@@ -40,4 +40,9 @@
 .signin-button:hover {
     background-color: #cca300; /* Darker yellow on hover */
 }
+
+.message-icon{
+    width: 40px;
+    height: 40px;
+}
   
