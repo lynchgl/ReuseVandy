@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, collection } from "firebase/firestore";
 import { getAuth } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
 
@@ -26,6 +26,10 @@ const dbTodos = getFirestore(app);
 // Export the Firestore instance for Profile items
 const dbUsers = getFirestore(app);
 
+// Export the Firestore instance for Messages
+const dbMessages = collection(getFirestore(app), 'messages');
+
+// Export the Firestore instance for User Profiles
 const dbProfiles = getFirestore(app);
 
 const auth = getAuth(app);
@@ -34,4 +38,4 @@ const db = getFirestore(app);
 
 const storage = getStorage(app);
 
-export { dbMarketplaceListings, dbTodos, dbUsers, auth, db, storage, dbProfiles };
+export { dbMarketplaceListings, dbTodos, dbUsers, dbMessages, auth, db, storage, dbProfiles };
