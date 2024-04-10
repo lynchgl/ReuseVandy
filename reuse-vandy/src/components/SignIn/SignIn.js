@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, getAdditionalUserInfo } from 'firebase/auth';
 import { auth, signInWithGooglePopup } from '../../services/firebase.config';
 import { Link } from 'react-router-dom';
 import googleSignIn from '../../images/google-signin.png'

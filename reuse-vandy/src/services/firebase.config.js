@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { getAuth, signInWithPopup, GoogleAuthProvider, getAdditionalUserInfo } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
 
 // Your web app's Firebase configuration
@@ -43,6 +43,12 @@ provider.setCustomParameters({
 });
 
 export const auth = getAuth();
-export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
+export const signInWithGooglePopup = () => signInWithPopup(auth, provider).then((result) => {
+  const additionalUserInfo = getAdditionalUserInfo(result);
+
+  if (additionalUserInfo.isNewUser) {
+    console.error("This is a new user!")
+  }
+});
 
 export { dbMarketplaceListings, dbTodos, dbUsers, db, storage, dbProfiles }; // auth?
