@@ -173,7 +173,6 @@ const Profile = () => {
           {profileCompleted ? (
             <>
               <div className="profile-info">
-                <h2>Your Profile</h2>
                 <div className="profile-details">
                   <div className="profile-details-left">
                     <img src={profileImage} alt="Profile" className="profile-img" />
