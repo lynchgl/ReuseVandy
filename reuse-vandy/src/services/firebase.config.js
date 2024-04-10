@@ -27,7 +27,7 @@ const dbTodos = getFirestore(app);
 const dbUsers = getFirestore(app);
 
 // Export the Firestore instance for Messages
-const dbMessages = collection(getFirestore(app), 'messages');
+const dbMessages = getFirestore(app);
 
 // Export the Firestore instance for User Profiles
 const dbProfiles = getFirestore(app);

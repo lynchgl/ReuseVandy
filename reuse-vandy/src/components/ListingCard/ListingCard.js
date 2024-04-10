@@ -34,9 +34,12 @@ const ListingCard = ({ id, title, category, price, image, currentUser, listing }
         setShowModal(false);
     };
 
-    // Handle sending message
     const handleMessageSend = async () => {
         try {
+            if (!currentUser || !currentUser.uid) {
+                console.error('Current user not available or missing uid');
+                return;
+            }
             const messageData = {
                 senderId: currentUser.uid,
                 receiverId: listing.userId,
@@ -50,6 +53,7 @@ const ListingCard = ({ id, title, category, price, image, currentUser, listing }
             console.error('Error sending message:', error);
         }
     };
+    
 
     return (
         <div className="col-md-4 mb-3" key={id}>
