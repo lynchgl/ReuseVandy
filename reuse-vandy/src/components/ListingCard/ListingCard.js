@@ -20,6 +20,12 @@ const ListingCard = ({ id, title, category, price, image, currentUser, listing }
         return () => unsubscribe();
     }, []);
 
+    const handleViewDetails = () => {
+        if (!isLoggedIn) {
+            alert('Please sign in to view product details.');
+        }
+    }
+
     // Handle changes in message content
     const handleMessageChange = (event) => {
         setMessageContent(event.target.value);
@@ -53,22 +59,38 @@ const ListingCard = ({ id, title, category, price, image, currentUser, listing }
             console.error('Error sending message:', error);
         }
     };
-    
+
 
     return (
         <div className="col-md-4 mb-3" key={id}>
             <div className="card h-100">
-                <Link to={`/listing/${id}`} className="card-link">
-                    {image && <img src={image} className="card-img-top" alt="Listing" />}
-                </Link>
-                <div className="card-body d-flex flex-column">
+                {!isLoggedIn && (
+                    <img src={image} className="card-img-top" alt="Listing" />
+                )}
+                {isLoggedIn && (
                     <Link to={`/listing/${id}`} className="card-link">
-                        <h5 className="card-title">{title}</h5>
-                        <p className="card-text">
-                            <strong>Category:</strong> {category} <br />
-                            <strong>Price:</strong> ${price} <br />
-                        </p>
+                        {image && <img src={image} className="card-img-top" alt="Listing" />}
                     </Link>
+                )}
+                <div className="card-body d-flex flex-column">
+                    {!isLoggedIn && (
+                        <div>
+                            <h5 className="card-title">{title}</h5>
+                            <p className="card-text">
+                                <strong>Category:</strong> {category} <br />
+                                <strong>Price:</strong> ${price} <br />
+                            </p>
+                        </div>
+                    )}
+                    {isLoggedIn && (
+                        <Link to={`/listing/${id}`} className="card-link">
+                            <h5 className="card-title">{title}</h5>
+                            <p className="card-text">
+                                <strong>Category:</strong> {category} <br />
+                                <strong>Price:</strong> ${price} <br />
+                            </p>
+                        </Link>
+                    )}
                     {isLoggedIn && (
                         <div className="favorite-button-container">
                             <Favorites listingId={id} />
