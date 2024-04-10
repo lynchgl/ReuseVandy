@@ -51,26 +51,26 @@ const Profile = () => {
       }
     };
 
-      const fetchFavorites = async () => {
-        try {
-          const user = auth.currentUser;
-          if (user) {
-            console.log("User:", user);
-            const userRef = doc(dbUsers, 'profiles', user.uid); // Reference to user's profile document
-            console.log("User Ref:", userRef);
-            const userSnapshot = await getDoc(userRef); // Retrieve the profile document
-            console.log("User Snapshot:", userSnapshot);
-            if (userSnapshot.exists()) {
-              const userData = userSnapshot.data(); // Extract user data
-              console.log("User Data:", userData);
-              setFavorites(userData.favorites || []); // Set favorites from user data, or an empty array if not present
-            }
+    const fetchFavorites = async () => {
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          console.log("User:", user);
+          const userRef = doc(dbUsers, 'profiles', user.uid); // Reference to user's profile document
+          console.log("User Ref:", userRef);
+          const userSnapshot = await getDoc(userRef); // Retrieve the profile document
+          console.log("User Snapshot:", userSnapshot);
+          if (userSnapshot.exists()) {
+            const userData = userSnapshot.data(); // Extract user data
+            console.log("User Data:", userData);
+            setFavorites(userData.favorites || []); // Set favorites from user data, or an empty array if not present
           }
-        } catch (error) {
-          console.error('Error fetching favorites:', error);
         }
-      };
-    
+      } catch (error) {
+        console.error('Error fetching favorites:', error);
+      }
+    };
+
 
     fetchProfile();
     fetchFavorites(); // Call fetchFavorites
@@ -100,7 +100,7 @@ const Profile = () => {
 
       //upload image to storage
       const storageRef = ref(storage);
-      
+
       const imageRef = ref(storageRef, `profile_images/${name}-${Date.now()}`);
       await uploadBytes(imageRef, profileImage);
 
@@ -174,12 +174,17 @@ const Profile = () => {
             <>
               <div className="profile-info">
                 <h2>Your Profile</h2>
-                <img src={profileImage} alt="Profile" className="profile-img" />
-                <p>Name: {name}</p>
-                <p>Age: {age}</p>
-                <p>Bio: {bio}</p>
-                <p>Venmo QR Code:</p>
-                <img src={qrCode} alt="QR Code" className="qr-code-img"/>
+                <div className="profile-details">
+                  <div className="profile-details-left">
+                    <img src={profileImage} alt="Profile" className="profile-img" />
+                    <p>Name: {name}</p>
+                    <p>Age: {age}</p>
+                    <p>Bio: {bio}</p>
+                  </div>
+                  <div className="profile-details-right">
+                    <img src={qrCode} alt="QR Code" className="qr-code-img" />
+                  </div>
+                </div>
                 <Link to="/marketplace">
                   <button onClick={handleLogout} className="btn btn-secondary">Log Out</button>
                 </Link>
@@ -200,7 +205,7 @@ const Profile = () => {
               </div>
               <div className="tab-content">
                 {activeTab === 'listings' && <MarketplacePage currentUserOnly />}
-                {activeTab === 'favorites' && <MarketplacePage favorites={favorites} />} 
+                {activeTab === 'favorites' && <MarketplacePage favorites={favorites} />}
               </div>
             </>
           ) : (

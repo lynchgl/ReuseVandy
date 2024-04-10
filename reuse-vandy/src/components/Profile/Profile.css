@@ -11,6 +11,8 @@
     border: 1px solid #ccc;
     border-radius: 10px;
     width: 1300px;
+    display: flex;
+    flex-direction: column;
 }
 
 .profile-img {
@@ -20,14 +22,18 @@
 }
 
 .qr-code-img {
-    max-width: 100px; 
-    margin-bottom: 10px; 
-    border-radius: 0; /* Ensures square corners */
+    max-width: 250px;
+    margin-bottom: 10px;
+    border-radius: 0;
+    align-self: flex-end;
+    margin-right: 100px;
+    /* Ensures square corners */
 }
 
 .tabs {
     display: flex;
-    justify-content: center; /* Center the tab selection */
+    justify-content: center;
+    /* Center the tab selection */
     margin-bottom: 0px;
 }
 
@@ -76,4 +82,20 @@
 
 .listings-section .col-md-4 {
     width: auto;
+}
+
+.profile-details {
+    display: flex;
+}
+
+.profile-details-left {
+    margin-right: 100px;
+    /* Adjust as needed */
+}
+
+.profile-details-right {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-self: flex-end;
 }
