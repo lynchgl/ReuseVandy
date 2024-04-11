@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { doc, getDoc, query, collection, where, getDocs, deleteDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, query, collection, where, getDocs, deleteDoc, updateDoc, addDoc } from 'firebase/firestore';
 import { dbMarketplaceListings, dbProfiles, auth } from '../../services/firebase.config';
 import { useParams } from 'react-router-dom';
 import { Spinner, Modal, Button } from 'react-bootstrap';
 import NavigationBar from '../NavigationBar/NavigationBar';
 import EditMarketplaceListing from '../EditMarketplaceListing/EditMarketplaceListing';
+import { dbMessages } from '../../services/firebase.config';
+
 import Favorites from '../Favorites/Favorites'
 import './ListingPage.css'
 
@@ -143,10 +145,28 @@ const ListingPage = () => {
 
     
     const handleMessageSend = async () => {
-        // Implement sending message functionality here
-        console.log('Sending message:', messageContent);
-        handleCloseModal();
+        try {
+            // Create a new message object
+            const newMessage = {
+                content: messageContent,
+                senderId: currentUser.uid, // Assuming you have the sender's ID
+                receiverId: listing.userId, // Assuming you have the receiver's ID
+                timestamp: new Date(), // Assuming you want to timestamp the message
+            };
+    
+            // Add the new message to the Firestore collection
+            await addDoc(collection(dbMessages, 'messages'), newMessage);
+    
+            // Log a success message
+            console.log('Message sent:', newMessage);
+    
+            // Close the modal
+            handleCloseModal();
+        } catch (error) {
+            console.error('Error sending message:', error);
+        }
     };
+    
 
 
     return (

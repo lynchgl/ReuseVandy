@@ -5,28 +5,38 @@ import { dbMessages } from '../../services/firebase.config';
 const Message = ({ userId }) => {
     const [messages, setMessages] = useState([]);
 
+
     useEffect(() => {
         const fetchMessages = async () => {
             try {
                 const q = query(
                     collection(dbMessages),
-                    orderBy('timestamp', 'desc'),
-                    where('senderId', '==', userId).orderBy('timestamp', 'desc'),
-                    where('receiverId', '==', userId).orderBy('timestamp', 'desc')
+                    where('senderId', '==', userId),
+                    where('receiverId', '==', userId),
+                    orderBy('timestamp', 'desc')
                 );
-                
+        
+                console.log('Firestore Query:', q); // Log Firestore query
+        
                 const querySnapshot = await getDocs(q);
-
+        
+                console.log('Query Snapshot:', querySnapshot); // Log query snapshot
+        
                 const fetchedMessages = querySnapshot.docs.map(doc => ({
                     id: doc.id,
                     ...doc.data()
                 }));
-
+        
+                console.log('Fetched Messages:', fetchedMessages); // Log fetched messages
+        
                 setMessages(fetchedMessages);
             } catch (error) {
                 console.error('Error fetching messages:', error);
             }
         };
+        
+        
+        
 
         fetchMessages();
     }, [userId]);
