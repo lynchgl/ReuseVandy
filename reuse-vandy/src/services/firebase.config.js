@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { getFirestore, collection } from "firebase/firestore";
 import { getStorage } from 'firebase/storage';
 
 // Your web app's Firebase configuration
@@ -26,6 +26,10 @@ const dbTodos = getFirestore(app);
 // Export the Firestore instance for Profile items
 const dbUsers = getFirestore(app);
 
+// Export the Firestore instance for Messages
+const dbMessages = getFirestore(app);
+
+// Export the Firestore instance for User Profiles
 const dbProfiles = getFirestore(app);
 
 //const auth = getAuth(app);

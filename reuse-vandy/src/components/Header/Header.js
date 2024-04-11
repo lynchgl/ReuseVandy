@@ -3,6 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import logo from '../../images/logo.png'
 import profileIcon from '../../images/profile.png'; // Import profile icon
+import messagingIcon from '../../images/message.png'; // Import message icon
+
 import reuse from '../../images/reuse.png';
 import './Header.css'
 import { auth } from '../../services/firebase.config';
@@ -39,9 +41,15 @@ const Header = () => {
         )}
         {isLoggedIn && (
           <>
+            <Link to="/message">
+              <img src={messagingIcon} alt="Message" className="icon message-icon" />
+            </Link>
+        
             <Link to="/profile">
               <img src={profileIcon} alt="Profile" className="icon" />
             </Link>
+            
+            
           </>
         )}
       </div>

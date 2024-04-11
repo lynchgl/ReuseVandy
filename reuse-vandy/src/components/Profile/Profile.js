@@ -12,6 +12,7 @@ const Profile = () => {
   const [age, setAge] = useState('');
   const [bio, setBio] = useState('');
   const [profileImage, setProfileImage] = useState(null);
+  const [qrCode, setQrCode] = useState(null); // State for QR code
   const [profileCompleted, setProfileCompleted] = useState(false);
   const [loggedOut, setLoggedOut] = useState(false);
   const [favorites, setFavorites] = useState([]); // Add favorites state
@@ -42,6 +43,7 @@ const Profile = () => {
           setAge(profileData.age.toString());
           setBio(profileData.bio);
           setProfileImage(profileData.imageUrl);
+          setQrCode(profileData.qrCodeUrl);
           setProfileCompleted(true);
         }
       } catch (error) {
@@ -49,26 +51,26 @@ const Profile = () => {
       }
     };
 
-      const fetchFavorites = async () => {
-        try {
-          const user = auth.currentUser;
-          if (user) {
-            console.log("User:", user);
-            const userRef = doc(dbUsers, 'profiles', user.uid); // Reference to user's profile document
-            console.log("User Ref:", userRef);
-            const userSnapshot = await getDoc(userRef); // Retrieve the profile document
-            console.log("User Snapshot:", userSnapshot);
-            if (userSnapshot.exists()) {
-              const userData = userSnapshot.data(); // Extract user data
-              console.log("User Data:", userData);
-              setFavorites(userData.favorites || []); // Set favorites from user data, or an empty array if not present
-            }
+    const fetchFavorites = async () => {
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          console.log("User:", user);
+          const userRef = doc(dbUsers, 'profiles', user.uid); // Reference to user's profile document
+          console.log("User Ref:", userRef);
+          const userSnapshot = await getDoc(userRef); // Retrieve the profile document
+          console.log("User Snapshot:", userSnapshot);
+          if (userSnapshot.exists()) {
+            const userData = userSnapshot.data(); // Extract user data
+            console.log("User Data:", userData);
+            setFavorites(userData.favorites || []); // Set favorites from user data, or an empty array if not present
           }
-        } catch (error) {
-          console.error('Error fetching favorites:', error);
         }
-      };
-    
+      } catch (error) {
+        console.error('Error fetching favorites:', error);
+      }
+    };
+
 
     fetchProfile();
     fetchFavorites(); // Call fetchFavorites
@@ -78,6 +80,11 @@ const Profile = () => {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     setProfileImage(file);
+  };
+
+  const handleQrCodeUpload = (e) => {
+    const file = e.target.files[0];
+    setQrCode(file); // Set QR code
   };
 
   const submitProfile = async (e) => {
@@ -93,12 +100,21 @@ const Profile = () => {
 
       //upload image to storage
       const storageRef = ref(storage);
+
       const imageRef = ref(storageRef, `profile_images/${name}-${Date.now()}`);
       await uploadBytes(imageRef, profileImage);
+
+      //upload qr code to storage
+      const qrRef = ref(storageRef, `qr_codes/${name}-${Date.now()}`);
+      await uploadBytes(qrRef, qrCode);
 
       // Get image URL
       const imageUrl = await getDownloadURL(imageRef);
       console.log('Image URL:', imageUrl);
+
+      // Get qr code URL
+      const qrCodeUrl = await getDownloadURL(qrRef);
+      console.log('QR Code: ', qrCodeUrl);
 
       if (profileCompleted) {
         // Update existing profile
@@ -110,6 +126,7 @@ const Profile = () => {
           age: parseInt(age),
           bio,
           imageUrl,
+          qrCodeUrl,
           timestamp: serverTimestamp(),
         });
       } else {
@@ -120,6 +137,7 @@ const Profile = () => {
           age: parseInt(age),
           bio,
           imageUrl,
+          qrCodeUrl,
           timestamp: serverTimestamp(),
         });
 
@@ -132,6 +150,7 @@ const Profile = () => {
       setAge('');
       setBio('');
       setProfileImage(null);
+      setQrCode(null);
     } catch (err) {
       console.error('Error updating/adding profile:', err);
     }
@@ -154,11 +173,17 @@ const Profile = () => {
           {profileCompleted ? (
             <>
               <div className="profile-info">
-                <h2>Your Profile</h2>
-                <img src={profileImage} alt="Profile" />
-                <p>Name: {name}</p>
-                <p>Age: {age}</p>
-                <p>Bio: {bio}</p>
+                <div className="profile-details">
+                  <div className="profile-details-left">
+                    <img src={profileImage} alt="Profile" className="profile-img" />
+                    <p>Name: {name}</p>
+                    <p>Age: {age}</p>
+                    <p>Bio: {bio}</p>
+                  </div>
+                  <div className="profile-details-right">
+                    <img src={qrCode} alt="QR Code" className="qr-code-img" />
+                  </div>
+                </div>
                 <Link to="/marketplace">
                   <button onClick={handleLogout} className="btn btn-secondary">Log Out</button>
                 </Link>
@@ -179,7 +204,7 @@ const Profile = () => {
               </div>
               <div className="tab-content">
                 {activeTab === 'listings' && <MarketplacePage currentUserOnly />}
-                {activeTab === 'favorites' && <MarketplacePage favorites={favorites} />} 
+                {activeTab === 'favorites' && <MarketplacePage favorites={favorites} />}
               </div>
             </>
           ) : (
@@ -194,6 +219,16 @@ const Profile = () => {
                     id="imageInput"
                     accept="image/*"
                     onChange={(e) => handleImageUpload(e)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="qrCodeInput">Venmo QR Code:</label>
+                  <input
+                    type="file"
+                    className="form-control-file"
+                    id="imageInput"
+                    accept="image/*"
+                    onChange={(e) => handleQrCodeUpload(e)}
                   />
                 </div>
                 <div className="form-group">
