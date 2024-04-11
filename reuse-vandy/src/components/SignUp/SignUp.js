@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, deleteUser } from 'firebase/auth';
 import { auth, db, signInWithGooglePopup } from '../../services/firebase.config.js';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { Navigate, Link } from 'react-router-dom';
@@ -91,8 +91,18 @@ const SignUp = () => {
       // Check if email ends with "@vanderbilt.edu"
       if (!email || !email.endsWith('@vanderbilt.edu')) {
         setError('Email must end with "@vanderbilt.edu"');
+
+        const user = auth.currentUser;
+
+        deleteUser(user).then(() => {
+          console.log("User deleted!");
+        })
+
+        auth.signOut();
+
         return;
       }
+
       // If email validation passes, proceed with sign-up
       await addDoc(collection(db, 'users'), {
         userId: response.user.uid,
