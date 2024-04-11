@@ -71,7 +71,7 @@ const Messages = () => {
     if (currentUser) {
       fetchMessagesandUsers();
     }
-  }, [currentUser, messages]);
+  }, [currentUser]);
 
   return (
     <div className="messages-container">
