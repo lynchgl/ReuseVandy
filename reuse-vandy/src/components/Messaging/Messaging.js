@@ -5,7 +5,6 @@ import UserList from '../UserList/UserList'
 import MessagingInteraction from '../MessagingInteraction/MessagingInteraction';
 import './Messaging.css'
 
-
 const Messages = () => {
   const [messages, setMessages] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
