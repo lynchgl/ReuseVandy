@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../services/firebase.config';
+import { signInWithEmailAndPassword, deleteUser } from 'firebase/auth';
+import { auth, signInWithGooglePopup } from '../../services/firebase.config';
 import { Link } from 'react-router-dom';
+import googleSignIn from '../../images/google-signin.png'
 import './SignIn.css'; // Import the CSS file for styling
 
 const SignIn = () => {
@@ -9,6 +10,7 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [firstTime, setFirstTime] = useState(null);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -21,9 +23,46 @@ const SignIn = () => {
     }
   };
 
+  const logGoogleUser = async () => {
+    try {
+      const response = await signInWithGooglePopup();
+
+      const { email } = response.user;
+
+      // check if new user
+      const creationTime = response.user.metadata.creationTime
+      const lastLogIn = response.user.metadata.lastSignInTime
+
+      if (!email || !email.endsWith('@vanderbilt.edu')) {
+        setError('Email must end with @vanderbilt.edu');
+
+        const user = auth.currentUser;
+
+        deleteUser(user).then(() => {
+          console.log("User deleted!");
+        })
+
+        auth.signOut();
+      } else if (creationTime === lastLogIn) {
+        console.log("This is a new user")
+        setFirstTime("This is a first time user!")
+      } else {
+        setSuccess('Sign-in successful!');
+      }
+    } catch (error) {
+      setError(error.message); // Set the error message in state
+      console.error('Error signing in with Google:', error.message);
+    }
+  };
+
   // Render home page if sign-in is successful, redirect to home page
   if (success) {
     window.location.href = '/';
+    return null;
+  }
+
+  if (firstTime) {
+    window.location.href = '/profile';
     return null;
   }
 
@@ -32,6 +71,15 @@ const SignIn = () => {
       <h2 className="signin-title">Sign In to Reuse Vandy</h2>
       {error && <div className="error-message">{error}</div>} {/* Display error if exists */}
       {success && <div className="success-message">{success}</div>} {/* Display success if exists */}
+
+      <div>
+        <img 
+          className='google-signin-image'
+          src={googleSignIn} 
+          alt="Sign in with Google" 
+          onClick={logGoogleUser} 
+        />
+      </div>
 
       <form className="signin-form" onSubmit={handleSignIn}>
         <label>Email:</label>

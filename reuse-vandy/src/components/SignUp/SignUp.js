@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth, db } from '../../services/firebase.config.js';
+import { createUserWithEmailAndPassword, deleteUser } from 'firebase/auth';
+import { auth, db, signInWithGooglePopup } from '../../services/firebase.config.js';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { Navigate, Link } from 'react-router-dom';
 import './SignUp.css'; // Import SignUp.css file for styling
 import hideIcon from '../../images/hide password.png'
 import showIcon from '../../images/show password.png'
+import googleSignUp from '../../images/google-signup.png'
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
@@ -82,6 +83,46 @@ const SignUp = () => {
     setProfileCreated(true);
   };
 
+  const logGoogleUser = async () => {
+    try {
+      const response = await signInWithGooglePopup();
+      const { email } = response.user;
+
+      // Check if email ends with "@vanderbilt.edu"
+      if (!email || !email.endsWith('@vanderbilt.edu')) {
+        setError('Email must end with "@vanderbilt.edu"');
+
+        const user = auth.currentUser;
+
+        deleteUser(user).then(() => {
+          console.log("User deleted!");
+        })
+
+        auth.signOut();
+
+        return;
+      }
+
+      // If email validation passes, proceed with sign-up
+      await addDoc(collection(db, 'users'), {
+        userId: response.user.uid,
+        email: email,
+        name: '',
+        age: null,
+        bio: '',
+        imageUrl: '',
+        timestamp: serverTimestamp(),
+      });
+
+      setSuccess('Sign-up successful!'); // Set success message in state
+      setError(null); // Reset error state
+      setProfileCreated(true);
+    } catch (error) {
+      setError(error.message); // Set the error message in state
+      console.error('Error signing in with Google:', error.message);
+    }
+  };
+
   if (profileCreated && !error) {
     return <Navigate to="/profile" />;
   }
@@ -98,6 +139,15 @@ const SignUp = () => {
       <h2>Sign Up</h2>
       {error && <div className="error-message">{error}</div>} {/* Display error if exists */}
       {success && <div className="success-message">{success}</div>} {/* Display success if exists */}
+
+      <div>
+        <img
+          className='google-signup-image'
+          src={googleSignUp}
+          alt="Sign in with Google"
+          onClick={logGoogleUser}
+        />
+      </div>
 
       <form onSubmit={handleSignUp}>
         <label>Email:</label>
