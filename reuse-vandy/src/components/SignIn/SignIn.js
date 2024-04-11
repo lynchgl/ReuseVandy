@@ -10,6 +10,7 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [firstTime, setFirstTime] = useState(null);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -24,8 +25,17 @@ const SignIn = () => {
 
   const logGoogleUser = async () => {
     try {
-      await signInWithGooglePopup();
-      setSuccess('Sign-in successful!'); // Set success message in state
+      const response = await signInWithGooglePopup();
+
+      const creationTime = response.user.metadata.creationTime
+      const lastLogIn = response.user.metadata.lastSignInTime
+
+      if (creationTime === lastLogIn) {
+        console.log("This is a new user")
+        setFirstTime("This is a first time user!")
+      } else {
+        setSuccess('Sign-in successful!');
+      }
     } catch (error) {
       setError(error.message); // Set the error message in state
       console.error('Error signing in with Google:', error.message);
@@ -35,6 +45,11 @@ const SignIn = () => {
   // Render home page if sign-in is successful, redirect to home page
   if (success) {
     window.location.href = '/';
+    return null;
+  }
+
+  if (firstTime) {
+    window.location.href = '/profile';
     return null;
   }
 
