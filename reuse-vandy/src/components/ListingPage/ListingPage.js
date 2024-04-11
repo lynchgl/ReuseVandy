@@ -89,6 +89,8 @@ const ListingPage = () => {
 
     }, [id]);
 
+    
+
     const handleDelete = async (listingId) => {
         try {
             // Ask for confirmation before deleting
