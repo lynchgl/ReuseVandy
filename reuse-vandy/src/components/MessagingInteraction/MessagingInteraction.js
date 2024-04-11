@@ -1,4 +1,5 @@
 import React from 'react';
+import './MessagingInteraction.css';
 
 const MessagingInteraction = ({ selectedUser, messages }) => {
     // Filter messages based on the selected user

@@ -3,6 +3,7 @@ import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { dbMessages, auth, dbProfiles } from '../../services/firebase.config';
 import UserList from '../UserList/UserList'
 import MessagingInteraction from '../MessagingInteraction/MessagingInteraction';
+import './Messaging.css'
 
 
 const Messages = () => {

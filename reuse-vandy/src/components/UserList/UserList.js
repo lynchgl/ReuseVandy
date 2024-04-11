@@ -1,15 +1,17 @@
 import React from 'react';
+import './UserList.css';
 
 const UserList = ({ users, selectedUser, setSelectedUser }) => {
   return (
-    <div>
+    <div className="user-list">
       <h2>User List</h2>
       <ul>
         {users.map((user) => (
           <li 
-          key={user.id} 
-          onClick={() => setSelectedUser(user)}
-          style={{ fontWeight: selectedUser && selectedUser.id === user.id ? 'bold' : 'normal'}}
+            key={user.id} 
+            className={`user-list-item ${selectedUser && selectedUser.id === user.id ? 'selected' : ''}`}
+            onClick={() => setSelectedUser(user)}
+            style={{ fontWeight: selectedUser && selectedUser.id === user.id ? 'bold' : 'normal' }}
           >
             {user.name}
           </li>

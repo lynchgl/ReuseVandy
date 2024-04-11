@@ -1,0 +1,24 @@
+.messages-container {
+    display: flex;
+}
+
+.user-list-column {
+    flex: 0 0 250px;
+    /* Set fixed width for the user list column */
+}
+
+.messaging-interaction-column {
+    flex-grow: 1;
+    /* Allow messaging interaction column to grow */
+    border-left: 1px solid #ccc;
+    /* Add a border between user list and messaging interaction */
+}
+
+/* Hover effect for clickable user names */
+.user-list-item:hover {
+    background-color: #e6e6e6;
+}
+
+.user-list-item:hover {
+    cursor: pointer;
+}
