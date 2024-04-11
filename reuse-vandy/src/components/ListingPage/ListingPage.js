@@ -17,6 +17,8 @@ const ListingPage = () => {
     const [currentUser, setCurrentUser] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [isSold, setIsSold] = useState(false);
+    const [messageContent, setMessageContent] = useState("");
+
     const categories = ['Furniture', 'Decorations', 'Appliances', 'Kitchen', 'Clothing', 'Jewelry', 'Textbooks', 'Other books', 'Technology', 'Other']
 
     const handleContactClick = () => {
@@ -135,6 +137,18 @@ const ListingPage = () => {
         return new Date(timestamp.seconds * 1000).toLocaleDateString('en-US', options);
     };
 
+    const handleMessageChange = (event) => {
+        setMessageContent(event.target.value);
+    };
+
+    
+    const handleMessageSend = async () => {
+        // Implement sending message functionality here
+        console.log('Sending message:', messageContent);
+        handleCloseModal();
+    };
+
+
     return (
         <>
             <NavigationBar />
@@ -218,24 +232,25 @@ const ListingPage = () => {
                         </>
                     )}
                 </div>
-                {/* Modal */}
-                <Modal show={showModal} onHide={handleCloseModal}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Contact Seller</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        {/* Add your contact message form or text here */}
-                        <p>Write your message to the seller here.</p>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={handleCloseModal}>
-                            Close
-                        </Button>
-                        <Button variant="primary" onClick={handleCloseModal}>
-                            Send Message
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
+               {/* Modal */}
+            <Modal show={showModal} onHide={handleCloseModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Contact Seller</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <textarea
+                        value={messageContent}
+                        onChange={handleMessageChange}
+                        className="form-control"
+                        placeholder="Write your message to the seller here."
+                        rows={4}
+                    ></textarea>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
+                    <Button variant="primary" onClick={handleMessageSend}>Send Message</Button>
+                </Modal.Footer>
+            </Modal>
             </div>
         </>
     );

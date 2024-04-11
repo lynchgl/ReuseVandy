@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+
 import { onAuthStateChanged } from 'firebase/auth';
 import { addDoc } from 'firebase/firestore'; // Only import addDoc for Firestore
 import { dbMessages, auth } from '../../services/firebase.config';
@@ -96,9 +97,9 @@ const ListingCard = ({ id, title, category, price, image, currentUser, listing }
                             <Favorites listingId={id} />
                         </div>
                     )}
-                    <Button variant="primary" onClick={handleOpenModal}>Contact Seller</Button>
+                    {/* <Button variant="primary" onClick={handleOpenModal}>Contact Seller</Button> */}
                 </div>
-                <Modal show={showModal} onHide={handleCloseModal}>
+                {/* <Modal show={showModal} onHide={handleCloseModal}>
                     <Modal.Header closeButton>
                         <Modal.Title>Contact Seller</Modal.Title>
                     </Modal.Header>
@@ -115,7 +116,7 @@ const ListingCard = ({ id, title, category, price, image, currentUser, listing }
                         <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
                         <Button variant="primary" onClick={handleMessageSend}>Send Message</Button>
                     </Modal.Footer>
-                </Modal>
+                </Modal> */}
             </div>
         </div>
     );
