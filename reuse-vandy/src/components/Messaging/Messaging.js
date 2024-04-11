@@ -10,20 +10,44 @@ const Messages = () => {
   useEffect(() => {
     const fetchMessages = async () => {
         try {
+          // Messages sent by current user
+          const sentMessagesQuery = query(
+            collection(dbMessages, 'messages'),
+            orderBy('timestamp', 'desc'),
+            where('senderId', '==', currentUser.uid)
+          );
+
+          const sentQuerySnapshot = await getDocs(sentMessagesQuery);
+          const sentMessages = sentQuerySnapshot.docs.map((doc) => ({id: doc.id, ...doc.data() }));
+
+          console.log("Sent messages: ", sentMessages);
+
+          // Messages received by current user
+          const receivedMessageQuery = query(
+            collection(dbMessages, 'messages'),
+            orderBy('timestamp', 'desc'),
+            where('receiverId', '==', currentUser.uid)
+          );
+
           const q = query(
             collection(dbMessages, 'messages'),
             orderBy('timestamp', 'desc'),
-            //where('senderId', '==', currentUser.uid),
-           // where('receiverId', '==', currentUser.uid)
+            where('senderId', '==', currentUser.uid),
           );
-          const querySnapshot = await getDocs(q);
-          console.log('Query Snapshot:', querySnapshot);
-          const fetchedMessages = [];
-          querySnapshot.forEach((doc) => {
-            fetchedMessages.push({ id: doc.id, ...doc.data() });
-          });
-          console.log('Fetched Messages:', fetchedMessages);
-          setMessages(fetchedMessages);
+
+          const receivedQuerySnapshot = await getDocs(receivedMessageQuery);
+          const receivedMessages = receivedQuerySnapshot.docs.map((doc) => ({id: doc.id, ...doc.data() }))
+
+          console.log("Received messages: ", receivedMessages);
+
+          // Combine sent and received messages
+          const allMessages = [...sentMessages, ...receivedMessages];
+
+          // Sort combined messages by timestamp
+          allMessages.sort((a, b) => b.timestamp - a.timestamp);
+
+          setMessages(allMessages);
+
         } catch (error) {
           console.error('Error fetching messages:', error);
         }
