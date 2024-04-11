@@ -1,6 +1,6 @@
 import React from 'react';
 
-const UserList = ({ currentUser, users, selectedUser, setSelectedUser }) => {
+const UserList = ({ users, selectedUser, setSelectedUser }) => {
   return (
     <div>
       <h2>User List</h2>
