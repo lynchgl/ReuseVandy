@@ -18,3 +18,8 @@
 .user-list-item:hover {
     background-color: #e6e6e6;
 }
+
+.user-list ul {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0;
+}
