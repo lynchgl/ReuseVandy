@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { signInWithEmailAndPassword, getAdditionalUserInfo } from 'firebase/auth';
+import { signInWithEmailAndPassword, deleteUser } from 'firebase/auth';
 import { auth, signInWithGooglePopup } from '../../services/firebase.config';
 import { Link } from 'react-router-dom';
 import googleSignIn from '../../images/google-signin.png'
@@ -27,10 +27,23 @@ const SignIn = () => {
     try {
       const response = await signInWithGooglePopup();
 
+      const { email } = response.user;
+
+      // check if new user
       const creationTime = response.user.metadata.creationTime
       const lastLogIn = response.user.metadata.lastSignInTime
 
-      if (creationTime === lastLogIn) {
+      if (!email || !email.endsWith('@vanderbilt.edu')) {
+        setError('Email must end with @vanderbilt.edu');
+
+        const user = auth.currentUser;
+
+        deleteUser(user).then(() => {
+          console.log("User deleted!");
+        })
+
+        auth.signOut();
+      } else if (creationTime === lastLogIn) {
         console.log("This is a new user")
         setFirstTime("This is a first time user!")
       } else {
