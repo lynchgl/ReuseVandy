@@ -12,7 +12,7 @@ const Messages = () => {
   const currentUser = auth.currentUser;
 
   useEffect(() => {
-    const fetchMessages = async () => {
+    const fetchMessagesandUsers = async () => {
       try {
         // Messages sent by current user
         const sentMessagesQuery = query(
@@ -42,13 +42,6 @@ const Messages = () => {
 
         setMessages(allMessages);
 
-      } catch (error) {
-        console.error('Error fetching messages:', error);
-      }
-    };
-
-    const fetchUsers = async () => {
-      try {
         const usersSet = new Set();
 
         // Extract users from messages
@@ -69,15 +62,14 @@ const Messages = () => {
 
         const usersData = await Promise.all(usersQueryPromises);
         setUsers(usersData);
+
       } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error('Error fetching data:', error);
       }
     };
 
-
     if (currentUser) {
-      fetchMessages();
-      fetchUsers();
+      fetchMessagesandUsers();
     }
   }, [currentUser, messages]);
 
