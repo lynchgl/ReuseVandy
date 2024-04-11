@@ -1,82 +1,94 @@
 import React, { useState, useEffect } from 'react';
 import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
-import { dbMessages, auth, dbUsers } from '../../services/firebase.config';
-import UserList from './UserList/UserList';
-import MessagingInteraction from './MessagingInteraction/MessagingInteraction';
+import { dbMessages, auth, dbProfiles } from '../../services/firebase.config';
+import UserList from '../UserList/UserList'
+import MessagingInteraction from '../MessagingInteraction/MessagingInteraction';
 
 
 const Messages = () => {
   const [messages, setMessages] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [users, setUsers] = useState([]);
   const currentUser = auth.currentUser;
 
   useEffect(() => {
     const fetchMessages = async () => {
-        try {
-          // Messages sent by current user
-          const sentMessagesQuery = query(
-            collection(dbMessages, 'messages'),
-            orderBy('timestamp', 'desc'),
-            where('senderId', '==', currentUser.uid)
-          );
+      try {
+        // Messages sent by current user
+        const sentMessagesQuery = query(
+          collection(dbMessages, 'messages'),
+          orderBy('timestamp', 'desc'),
+          where('senderId', '==', currentUser.uid)
+        );
 
-          const sentQuerySnapshot = await getDocs(sentMessagesQuery);
-          const sentMessages = sentQuerySnapshot.docs.map((doc) => ({id: doc.id, ...doc.data() }));
+        const sentQuerySnapshot = await getDocs(sentMessagesQuery);
+        const sentMessages = sentQuerySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
-          console.log("Sent messages: ", sentMessages);
+        // Messages received by current user
+        const receivedMessageQuery = query(
+          collection(dbMessages, 'messages'),
+          orderBy('timestamp', 'desc'),
+          where('receiverId', '==', currentUser.uid)
+        );
 
-          // Messages received by current user
-          const receivedMessageQuery = query(
-            collection(dbMessages, 'messages'),
-            orderBy('timestamp', 'desc'),
-            where('receiverId', '==', currentUser.uid)
-          );
+        const receivedQuerySnapshot = await getDocs(receivedMessageQuery);
+        const receivedMessages = receivedQuerySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
 
-          const q = query(
-            collection(dbMessages, 'messages'),
-            orderBy('timestamp', 'desc'),
-            where('senderId', '==', currentUser.uid),
-          );
+        // Combine sent and received messages
+        const allMessages = [...sentMessages, ...receivedMessages];
 
-          const receivedQuerySnapshot = await getDocs(receivedMessageQuery);
-          const receivedMessages = receivedQuerySnapshot.docs.map((doc) => ({id: doc.id, ...doc.data() }))
+        // Sort combined messages by timestamp
+        allMessages.sort((a, b) => b.timestamp - a.timestamp);
 
-          console.log("Received messages: ", receivedMessages);
+        setMessages(allMessages);
 
-          // Combine sent and received messages
-          const allMessages = [...sentMessages, ...receivedMessages];
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      }
+    };
 
-          // Sort combined messages by timestamp
-          allMessages.sort((a, b) => b.timestamp - a.timestamp);
+    const fetchUsers = async () => {
+      try {
+        const usersSet = new Set();
 
-          setMessages(allMessages);
+        // Extract users from messages
+        messages.forEach((message) => {
+          if (message.senderId !== currentUser.uid) {
+            usersSet.add(message.senderId);
+          }
+          if (message.receiverId !== currentUser.uid) {
+            usersSet.add(message.receiverId);
+          }
+        });
 
-        } catch (error) {
-          console.error('Error fetching messages:', error);
-        }
-      };
-      
+        // Query user details
+        const usersQueryPromises = Array.from(usersSet).map(async (userId) => {
+          const userDoc = await getDocs(query(collection(dbProfiles, 'profiles'), where('userId', '==', userId)));
+          return userDoc.docs.map((doc) => ({ id: doc.id, ...doc.data() }))[0];
+        });
+
+        const usersData = await Promise.all(usersQueryPromises);
+        setUsers(usersData);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
 
     if (currentUser) {
       fetchMessages();
+      fetchUsers();
     }
-  }, [currentUser]);
+  }, [currentUser, messages]);
 
   return (
-    <div>
-      <h1>Your Messages</h1>
-      {messages.length === 0 ? (
-        <p>No messages found.</p>
-      ) : (
-        <ul>
-          {messages.map((message) => (
-            <li key={message.id}>
-              {/* Display message content and other details */}
-              <p>{message.content}</p>
-              {/* Add more message details as needed */}
-            </li>
-          ))}
-        </ul>
-      )}
+    <div className="messages-container">
+      <div className="user-list-column">
+        <UserList users={users} selectedUser = {selectedUser} setSelectedUser={setSelectedUser} />
+      </div>
+      <div className="messaging-interaction-column">
+        <MessagingInteraction selectedUser={selectedUser} messages={messages} />
+      </div>
     </div>
   );
 };
