@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
-import { dbMessages, auth } from '../../services/firebase.config';
-import { dbUsers, auth } from '../../services/firebase.config';
+import { dbMessages, auth, dbUsers } from '../../services/firebase.config';
 
 
 const Messages = () => {

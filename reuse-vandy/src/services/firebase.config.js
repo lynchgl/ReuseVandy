@@ -49,4 +49,4 @@ provider.setCustomParameters({
 export const auth = getAuth();
 export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
 
-export { dbMarketplaceListings, dbTodos, dbUsers, db, storage, dbProfiles }; // auth?
+export { dbMarketplaceListings, dbTodos, dbUsers, db, storage, dbProfiles, dbMessages }; // auth?
