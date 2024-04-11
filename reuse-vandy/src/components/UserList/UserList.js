@@ -4,7 +4,6 @@ import './UserList.css';
 const UserList = ({ users, selectedUser, setSelectedUser }) => {
   return (
     <div className="user-list">
-      <h2>User List</h2>
       <ul>
         {users.map((user) => (
           <li 

@@ -15,7 +15,6 @@ const MessagingInteraction = ({ selectedUser, messages }) => {
 
     return (
         <div className="messaging-interaction">
-            <h2>Messaging Interaction</h2>
             {selectedUser ? (
                 <div>
                     <h3>{selectedUser.displayName || selectedUser.email}</h3>

@@ -1,6 +1,7 @@
 .messaging-interaction {
     flex-grow: 1;
     padding: 20px;
+    margin-top: 50px;
 }
 
 .messaging-interaction h2 {
