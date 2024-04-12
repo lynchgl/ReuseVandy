@@ -195,7 +195,6 @@ const ListingPage = () => {
     };
     
     console.log('user:', userName)
-
     console.log('qr:', qrCode)
 
 
@@ -213,16 +212,18 @@ const ListingPage = () => {
                     <p>Price: ${listing.price}</p>
                     <p>Listed on: {formatDate(listing.timestamp)}</p>
                     <p>Listed By: {userName}</p>
-
+                  
+                    
                     {qrCode ? (
                         <div>
                             <p>Venmo:</p>
-                        <img src={qrCode} alt="Venmo QR Code" className="qr-code-img" />
+                        <img src={qrCode} alt="Venmo QR Code" className="qr-code-img"     style={{ width: '100px', height: '100px' }}
+/>
                         </div>
                         ) : (
                             <p>Venmo: No Venmo QR code uploaded</p>
                         )}
-
+                        
                     <div className="mt-auto">
                         <div className="favorite-button-container-2">
                             <Favorites listingId={id} />
