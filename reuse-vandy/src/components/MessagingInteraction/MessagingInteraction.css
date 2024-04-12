@@ -54,6 +54,11 @@
     margin-top: 7px;
 }
 
+.messaging-interaction .listing-name {
+    font-weight: bolder;
+    margin-bottom: 10px;
+}
+
 .message-timestamp {
     font-size: 12px;
     color: #999;
