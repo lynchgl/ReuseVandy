@@ -12,7 +12,7 @@ const Messages = () => {
   const currentUser = auth.currentUser;
 
   useEffect(() => {
-    const fetchMessagesandUsers = async () => {
+    const fetchMessages = async () => {
       try {
         // Messages sent by current user
         const sentMessagesQuery = query(
@@ -20,6 +20,8 @@ const Messages = () => {
           orderBy('timestamp', 'desc'),
           where('senderId', '==', currentUser.uid)
         );
+
+        console.log("Fetched messages sent by user");
 
         const sentQuerySnapshot = await getDocs(sentMessagesQuery);
         const sentMessages = sentQuerySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
@@ -30,6 +32,8 @@ const Messages = () => {
           orderBy('timestamp', 'desc'),
           where('receiverId', '==', currentUser.uid)
         );
+
+        console.log("Fetched messages received by user");
 
         const receivedQuerySnapshot = await getDocs(receivedMessageQuery);
         const receivedMessages = receivedQuerySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
@@ -42,6 +46,19 @@ const Messages = () => {
 
         setMessages(allMessages);
 
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      }
+    };
+
+    if (currentUser) {
+      fetchMessages();
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
         const usersSet = new Set();
 
         // Extract users from messages
@@ -54,6 +71,8 @@ const Messages = () => {
           }
         });
 
+        console.log("User set:", usersSet);
+
         // Query user details
         const usersQueryPromises = Array.from(usersSet).map(async (userId) => {
           const userDoc = await getDocs(query(collection(dbProfiles, 'profiles'), where('userId', '==', userId)));
@@ -61,17 +80,21 @@ const Messages = () => {
         });
 
         const usersData = await Promise.all(usersQueryPromises);
+
+        console.log("Fetched user data:", usersData);
+
         setUsers(usersData);
 
+        console.log(users);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching users:", error);
       }
     };
-
     if (currentUser) {
-      fetchMessagesandUsers();
+      fetchUsers();
     }
-  }, [currentUser]);
+
+  }, [messages]);
 
   return (
     <div className="messages-container">
