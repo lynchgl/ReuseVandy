@@ -76,3 +76,11 @@
     justify-content: center;
     align-items: center;
 }
+
+.send-message-button {
+    width: 500px;
+}
+
+.close-button {
+    width: 500px;
+}

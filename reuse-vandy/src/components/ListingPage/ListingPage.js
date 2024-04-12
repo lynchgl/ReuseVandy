@@ -112,8 +112,6 @@ const ListingPage = () => {
         }
     };
 
-
-
     const handleDelete = async (listingId) => {
         try {
             // Ask for confirmation before deleting
@@ -310,8 +308,8 @@ const ListingPage = () => {
                         ></textarea>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
-                        <Button variant="primary" onClick={handleMessageSend}>Send Message</Button>
+                        <Button variant="secondary" className="close-button" onClick={handleCloseModal}>Close</Button>
+                        <Button variant="primary" className="send-message-button" onClick={handleMessageSend}>Send Message</Button>
                     </Modal.Footer>
                 </Modal>
             </div>
