@@ -110,9 +110,9 @@ const ListingPage = () => {
             console.error('Error fetching user document:', error);
             return null;
         }
-      };
+    };
 
-    
+
 
     const handleDelete = async (listingId) => {
         try {
@@ -168,7 +168,7 @@ const ListingPage = () => {
         setMessageContent(event.target.value);
     };
 
-    
+
     const handleMessageSend = async () => {
         try {
             // Create a new message object
@@ -180,20 +180,20 @@ const ListingPage = () => {
                 listingName: listing.title,
                 listingPerson: userName
             };
-    
+
             // Add the new message to the Firestore collection
             await addDoc(collection(dbMessages, 'messages'), newMessage);
-    
+
             // Log a success message
             console.log('Message sent:', newMessage);
-    
+
             // Close the modal
             handleCloseModal();
         } catch (error) {
             console.error('Error sending message:', error);
         }
     };
-    
+
     console.log('user:', userName)
     console.log('qr:', qrCode)
 
@@ -205,112 +205,115 @@ const ListingPage = () => {
                 <div className="image-container">
                     <img src={listing.imageUrl} alt="Listing" className="listing-image" />
                 </div>
-                <div className="details-container">
-                    <h2>{listing.title}</h2>
-                    {currentUser && currentUser.uid !== listing.userId && listing.sold && <p className="sold-indicator">This item has been sold</p>}
-                    <p>Category: {listing.category}</p>
-                    <p>Price: ${listing.price}</p>
-                    <p>Listed on: {formatDate(listing.timestamp)}</p>
-                    <p>Listed By: {userName}</p>
-                  
-                    
-                    {qrCode ? (
-                        <div>
-                            <p>Venmo:</p>
-                        <img src={qrCode} alt="Venmo QR Code" className="qr-code-img"     style={{ width: '100px', height: '100px' }}
-/>
-                        </div>
-                        ) : (
-                            <p>Venmo: No Venmo QR code uploaded</p>
-                        )}
-                        
-                    <div className="mt-auto">
-                        <div className="favorite-button-container-2">
-                            <Favorites listingId={id} />
-                            <span>Add to Favorites</span>
-                        </div>
-                    </div>
+                <div className="details-and-qrcode-container">
+                    <div className="details-container">
+                        <h2>{listing.title}</h2>
+                        {currentUser && currentUser.uid !== listing.userId && listing.sold && <p className="sold-indicator">This item has been sold</p>}
+                        <p>Category: {listing.category}</p>
+                        <p>Price: ${listing.price}</p>
+                        <p>Listed on: {formatDate(listing.timestamp)}</p>
+                        <p>Listed By: {userName}</p>
 
-                    <div className="mt-auto">
-                        {currentUser && currentUser.uid !== listing.userId && (
+                        <div className="mt-auto">
+                            <div className="favorite-button-container-2">
+                                <Favorites listingId={id} />
+                                <span>Add to Favorites</span>
+                            </div>
+                        </div>
+
+                        <div className="mt-auto">
+                            {currentUser && currentUser.uid !== listing.userId && (
+                                <>
+                                    {<div className="row">
+                                        <div className="col-auto me-2">
+                                            <button
+                                                type="button"
+                                                className="btn btn-sm"
+                                                style={{
+                                                    backgroundColor: '#e6b800',
+                                                    marginTop: 8
+                                                }}
+                                                onClick={handleContactClick}
+
+                                            >
+                                                Contact Seller
+                                            </button>
+                                        </div>
+                                    </div>}
+                                </>
+                            )}
+                        </div>
+
+                        {/* Edit and Delte buttons */}
+                        {currentUser.uid === listing.userId && (
                             <>
-                                {<div className="row">
-                                    <div className="col-auto me-2">
-                                        <button
-                                            type="button"
-                                            className="btn btn-sm"
-                                            style={{
-                                                backgroundColor: '#e6b800'
-                                            }}
-                                            onClick={handleContactClick}
-
-                                        >
-                                            Contact Seller
-                                        </button>
-                                    </div>
-                                </div>}
+                                <div>
+                                    <button
+                                        className="sold-button"
+                                        onClick={handleToggleSold}
+                                        style={{
+                                            backgroundColor: isSold ? '#dc3545' : '#32CD32',
+                                            color: 'white',
+                                            padding: '10px 20px',
+                                            border: 'none',
+                                            borderRadius: '5px',
+                                            cursor: 'pointer',
+                                        }}
+                                    >
+                                        {isSold ? 'Sold!' : 'Mark as Sold'}
+                                    </button>
+                                </div>
+                                <EditMarketplaceListing
+                                    listing={{
+                                        title: listing.title,
+                                        category: listing.category,
+                                        price: listing.price,
+                                        id: id,
+                                        timestamp: listing.timestamp
+                                    }}
+                                    categories={categories}
+                                />
+                                <button
+                                    type="button"
+                                    className="btn btn-danger btn-action"
+                                    onClick={() => handleDelete(id)}
+                                >
+                                    Delete
+                                </button>
                             </>
                         )}
                     </div>
-
-                    {/* Edit and Delte buttons */}
-                    {currentUser.uid === listing.userId && (
-                        <>
+                    <div className='qrcode-container'>
+                        {qrCode ? (
                             <div>
-                                <button
-                                    className="sold-button"
-                                    onClick={handleToggleSold}
-                                    style={{
-                                        backgroundColor: isSold ? '#dc3545' : '#32CD32',
-                                        color: 'white',
-                                        padding: '10px 20px',
-                                        border: 'none',
-                                        borderRadius: '5px',
-                                        cursor: 'pointer',
-                                    }}
-                                >
-                                    {isSold ? 'Sold!' : 'Mark as Sold'}
-                                </button>
+                                <p>Venmo:</p>
+                                <img src={qrCode} alt="Venmo QR Code" className="qr-code-img" style={{ width: '150px', height: '150px' }}
+                                />
                             </div>
-                            <EditMarketplaceListing
-                                listing={{
-                                    title: listing.title,
-                                    category: listing.category,
-                                    price: listing.price,
-                                    id: id,
-                                    timestamp: listing.timestamp
-                                }}
-                                categories={categories}
-                            />
-                            <button
-                                type="button"
-                                className="btn btn-danger btn-action"
-                                onClick={() => handleDelete(id)}
-                            >
-                                Delete
-                            </button>
-                        </>
-                    )}
+                        ) : (
+                            <p>Venmo: No Venmo QR code uploaded</p>
+                        )}
+                    </div>
                 </div>
-               {/* Modal */}
-            <Modal show={showModal} onHide={handleCloseModal}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Contact Seller</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <textarea
-                        value={messageContent}
-                        onChange={handleMessageChange}
-                        className="form-control"
-                        placeholder="Write your message to the seller here."
-                        rows={4}
-                    ></textarea>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
-                    <Button variant="primary" onClick={handleMessageSend}>Send Message</Button>
-                </Modal.Footer>
-            </Modal>
+                {/* Modal */}
+                <Modal show={showModal} onHide={handleCloseModal}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Contact Seller</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <textarea
+                            value={messageContent}
+                            onChange={handleMessageChange}
+                            className="form-control"
+                            placeholder="Write your message to the seller here."
+                            rows={4}
+                        ></textarea>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
+                        <Button variant="primary" onClick={handleMessageSend}>Send Message</Button>
+                    </Modal.Footer>
+                </Modal>
             </div>
         </>
     );

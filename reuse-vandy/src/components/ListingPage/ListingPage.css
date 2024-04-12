@@ -5,9 +5,22 @@
     display: flex;
 }
 
+.details-and-qrcode-container {
+    padding-top: 50px;
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+}
+
+.qrcode-container {
+    margin-left: 100px;
+    margin-top: 50px;
+}
+
 .image-container {
     flex: 1;
-    margin-right: 20px;
+    margin-right: 30px;
+    max-width: 400px;
 }
 
 .listing-image {
