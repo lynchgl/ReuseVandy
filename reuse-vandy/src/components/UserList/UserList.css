@@ -1,0 +1,25 @@
+.user-list {
+    width: 250px;
+    background-color: #f2f2f2;
+    padding: 20px;
+    border-right: 1px solid #ccc;
+    margin-top: 50px;
+}
+
+.user-list h2 {
+    margin-bottom: 20px;
+}
+
+.user-list-item {
+    cursor: pointer;
+    padding: 10px;
+}
+
+.user-list-item:hover {
+    background-color: #e6e6e6;
+}
+
+.user-list ul {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0;
+}

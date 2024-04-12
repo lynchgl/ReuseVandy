@@ -1,0 +1,22 @@
+.messaging-interaction {
+    flex-grow: 1;
+    padding: 20px;
+    margin-top: 50px;
+}
+
+.messaging-interaction h2 {
+    margin-bottom: 20px;
+}
+
+.messaging-interaction ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.messaging-interaction ul li {
+    margin-bottom: 10px;
+}
+
+.messaging-interaction ul li:last-child {
+    margin-bottom: 0;
+}
