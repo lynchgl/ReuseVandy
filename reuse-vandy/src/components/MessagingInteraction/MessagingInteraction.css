@@ -20,3 +20,75 @@
 .messaging-interaction ul li:last-child {
     margin-bottom: 0;
 }
+
+.messaging-interaction .message-container {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-start;
+}
+
+.messaging-interaction .message-bubble {
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 20px;
+    max-width: 50%;
+}
+
+.messaging-interaction .sent-message {
+    text-align: right;
+    align-self: flex-end;
+    background-color: #007bff;
+    color: white;
+    border-radius: 20px;
+    max-width: 50%;
+    margin-top: 7px;
+}
+
+.messaging-interaction .received-message {
+    text-align: left;
+    align-self: flex-start;
+    background-color: #f1f0f0;
+    color: #333;
+    border-radius: 20px;
+    max-width: 50%;
+    margin-top: 7px;
+}
+
+.message-timestamp {
+    font-size: 12px;
+    color: #999;
+}
+
+/* Add these styles for the reply container */
+.reply-container {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Style for the reply textarea */
+.reply-textarea {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    height: 40px;
+    resize: vertical;
+    font-size: 14px;
+}
+
+/* Style for the reply button */
+.reply-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+/* Style for the reply button on hover */
+.reply-button:hover {
+    background-color: #0056b3;
+}
