@@ -1,4 +1,4 @@
-import React from 'react';
+import { React, useState } from 'react';
 import './MessagingInteraction.css';
 
 const MessagingInteraction = ({ currentUser, selectedUser, messages }) => {
@@ -12,6 +12,17 @@ const MessagingInteraction = ({ currentUser, selectedUser, messages }) => {
 
     console.log('Selected User:', selectedUser);
     console.log('Filtered Messages:', filteredMessages);
+
+    const [replyContent, setReplyContent] = useState('');
+
+    const handleReplyChange = (event) => {
+        setReplyContent(event.target.value);
+    };
+
+    const handleReply = () => {
+        // Add logic to handle reply button click
+        console.log('Reply content:', replyContent);
+    };
 
     return (
         <div className="messaging-interaction">
@@ -27,6 +38,16 @@ const MessagingInteraction = ({ currentUser, selectedUser, messages }) => {
                                 {message.content} - {message.timestamp.toDate().toLocaleString()}
                             </div>
                         ))}
+                    </div>
+                    <div className="reply-container">
+                        <textarea
+                            value={replyContent}
+                            onChange={handleReplyChange}
+                            className="reply-textarea"
+                            placeholder="Type your reply here..."
+                            rows={4}
+                        ></textarea>
+                        <button className="reply-button" onClick={handleReply}>Reply</button>
                     </div>
                 </div>
             ) : (

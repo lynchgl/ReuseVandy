@@ -58,3 +58,37 @@
     font-size: 12px;
     color: #999;
 }
+
+/* Add these styles for the reply container */
+.reply-container {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Style for the reply textarea */
+.reply-textarea {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    height: 40px;
+    resize: vertical;
+    font-size: 14px;
+}
+
+/* Style for the reply button */
+.reply-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+/* Style for the reply button on hover */
+.reply-button:hover {
+    background-color: #0056b3;
+}
