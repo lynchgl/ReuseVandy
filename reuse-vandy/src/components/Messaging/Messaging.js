@@ -102,7 +102,7 @@ const Messages = () => {
         <UserList users={users} selectedUser = {selectedUser} setSelectedUser={setSelectedUser} />
       </div>
       <div className="messaging-interaction-column">
-        <MessagingInteraction selectedUser={selectedUser} messages={messages} />
+        <MessagingInteraction currentUser = {currentUser} selectedUser={selectedUser} messages={messages} />
       </div>
     </div>
   );

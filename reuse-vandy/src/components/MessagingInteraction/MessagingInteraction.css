@@ -20,3 +20,41 @@
 .messaging-interaction ul li:last-child {
     margin-bottom: 0;
 }
+
+.messaging-interaction .message-container {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-start;
+}
+
+.messaging-interaction .message-bubble {
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 20px;
+    max-width: 50%;
+}
+
+.messaging-interaction .sent-message {
+    text-align: right;
+    align-self: flex-end;
+    background-color: #007bff;
+    color: white;
+    border-radius: 20px;
+    max-width: 50%;
+    margin-top: 7px;
+}
+
+.messaging-interaction .received-message {
+    text-align: left;
+    align-self: flex-start;
+    background-color: #f1f0f0;
+    color: #333;
+    border-radius: 20px;
+    max-width: 50%;
+    margin-top: 7px;
+}
+
+.message-timestamp {
+    font-size: 12px;
+    color: #999;
+}

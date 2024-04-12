@@ -1,7 +1,7 @@
 import React from 'react';
 import './MessagingInteraction.css';
 
-const MessagingInteraction = ({ selectedUser, messages }) => {
+const MessagingInteraction = ({ currentUser, selectedUser, messages }) => {
     // Filter messages based on the selected user
     const filteredMessages = selectedUser
         ? messages.filter(
@@ -18,13 +18,16 @@ const MessagingInteraction = ({ selectedUser, messages }) => {
             {selectedUser ? (
                 <div>
                     <h3>{selectedUser.displayName || selectedUser.email}</h3>
-                    <ul>
+                    <div className="message-container">
                         {filteredMessages.map((message) => (
-                            <li key={message.id}>
+                            <div
+                                key={message.id}
+                                className={`message-bubble ${message.senderId === selectedUser.userId ? 'received-message' : 'sent-message'}`}
+                            >
                                 {message.content} - {message.timestamp.toDate().toLocaleString()}
-                            </li>
+                            </div>
                         ))}
-                    </ul>
+                    </div>
                 </div>
             ) : (
                 <p>Select a user from the list to view messaging interactions.</p>
