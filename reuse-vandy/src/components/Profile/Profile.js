@@ -179,6 +179,7 @@ const Profile = () => {
                     <p>Name: {name}</p>
                     <p>Age: {age}</p>
                     <p>Bio: {bio}</p>
+                   
                   </div>
                   <div className="profile-details-right">
                     <img src={qrCode} alt="QR Code" className="qr-code-img" />
@@ -265,6 +266,7 @@ const Profile = () => {
                   ></textarea>
                 </div>
                 <button type="submit" className="btn btn-primary">Submit</button>
+               
               </form>
             </div>
           )}

@@ -16,6 +16,7 @@ const ListingPage = () => {
     const [listing, setListing] = useState(null);
     const [loading, setLoading] = useState(true);
     const [userName, setUserName] = useState("");
+    const [qrCode, setQrCode] = useState(null); // State for QR code
     const [currentUser, setCurrentUser] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [isSold, setIsSold] = useState(false);
@@ -68,8 +69,12 @@ const ListingPage = () => {
 
                     // Fetch user's name using the userId
                     const userName = await fetchUserName(userId);
+                    const qrCode = await fetchQR(userId)
                     if (userName !== null) {
                         setUserName(userName);
+                        if (qrCode !== null) {
+                            setQrCode(qrCode);
+                        }
                     }
                 } else {
                     console.log('Listing not found.');
@@ -88,6 +93,24 @@ const ListingPage = () => {
         };
 
     }, [id]);
+
+    const fetchQR = async (userId) => {
+        try {
+            const q = query(collection(dbProfiles, 'profiles'), where('userId', '==', userId));
+            const querySnapshot = await getDocs(q);
+            if (!querySnapshot.empty) {
+                // There should be only one document with the given userId
+                const userData = querySnapshot.docs[0].data();
+                return userData.qrCodeUrl;
+            } else {
+                console.log('User document not found.');
+                return null;
+            }
+        } catch (error) {
+            console.error('Error fetching user document:', error);
+            return null;
+        }
+      };
 
     
 
@@ -171,6 +194,9 @@ const ListingPage = () => {
         }
     };
     
+    console.log('user:', userName)
+
+    console.log('qr:', qrCode)
 
 
     return (
@@ -187,6 +213,15 @@ const ListingPage = () => {
                     <p>Price: ${listing.price}</p>
                     <p>Listed on: {formatDate(listing.timestamp)}</p>
                     <p>Listed By: {userName}</p>
+
+                    {qrCode ? (
+                        <div>
+                            <p>Venmo:</p>
+                        <img src={qrCode} alt="Venmo QR Code" className="qr-code-img" />
+                        </div>
+                        ) : (
+                            <p>Venmo: No Venmo QR code uploaded</p>
+                        )}
 
                     <div className="mt-auto">
                         <div className="favorite-button-container-2">
