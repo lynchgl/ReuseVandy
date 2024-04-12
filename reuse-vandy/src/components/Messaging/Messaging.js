@@ -11,6 +11,11 @@ const Messages = () => {
   const [users, setUsers] = useState([]);
   const currentUser = auth.currentUser;
 
+  // Function to update messages
+  const updateMessages = (newMessages) => {
+    setMessages(newMessages);
+  };
+
   useEffect(() => {
     const fetchMessages = async () => {
       try {
@@ -99,10 +104,18 @@ const Messages = () => {
   return (
     <div className="messages-container">
       <div className="user-list-column">
-        <UserList users={users} selectedUser = {selectedUser} setSelectedUser={setSelectedUser} />
+        <UserList
+          users={users}
+          selectedUser={selectedUser}
+          setSelectedUser={setSelectedUser} />
       </div>
       <div className="messaging-interaction-column">
-        <MessagingInteraction currentUser = {currentUser} selectedUser={selectedUser} messages={messages} />
+        <MessagingInteraction
+          currentUser={currentUser}
+          selectedUser={selectedUser}
+          messages={messages}
+          updateMessages={updateMessages}
+        />
       </div>
     </div>
   );

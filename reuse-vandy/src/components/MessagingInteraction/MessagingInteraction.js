@@ -1,7 +1,9 @@
 import { React, useState } from 'react';
+import { collection, addDoc } from 'firebase/firestore';
+import { dbMessages } from '../../services/firebase.config';
 import './MessagingInteraction.css';
 
-const MessagingInteraction = ({ currentUser, selectedUser, messages }) => {
+const MessagingInteraction = ({ currentUser, selectedUser, messages, updateMessages }) => {
     // Filter messages based on the selected user
     const filteredMessages = selectedUser
         ? messages.filter(
@@ -19,7 +21,26 @@ const MessagingInteraction = ({ currentUser, selectedUser, messages }) => {
         setReplyContent(event.target.value);
     };
 
-    const handleReply = () => {
+    const handleReply = async () => {
+        try {
+            const newMessage = {
+                content: replyContent,
+                senderId: currentUser.uid,
+                receiverId: selectedUser.userId,
+                timestamp: new Date()
+            };
+
+            await addDoc(collection(dbMessages, 'messages'), newMessage);
+
+            console.log("Message sent:", newMessage);
+
+            setReplyContent('');
+
+            updateMessages([newMessage, ...messages]);
+        } catch (error) {
+            console.error("Error sending message:", error);
+        }
+
         // Add logic to handle reply button click
         console.log('Reply content:', replyContent);
     };
@@ -35,7 +56,7 @@ const MessagingInteraction = ({ currentUser, selectedUser, messages }) => {
                                 key={message.id}
                                 className={`message-bubble ${message.senderId === selectedUser.userId ? 'received-message' : 'sent-message'}`}
                             >
-                                {message.content} - {message.timestamp.toDate().toLocaleString()}
+                                {message.content}
                             </div>
                         ))}
                     </div>
