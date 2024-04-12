@@ -154,6 +154,8 @@ const ListingPage = () => {
                 senderId: currentUser.uid, // Assuming you have the sender's ID
                 receiverId: listing.userId, // Assuming you have the receiver's ID
                 timestamp: new Date(), // Assuming you want to timestamp the message
+                listingName: listing.title,
+                listingPerson: userName
             };
     
             // Add the new message to the Firestore collection

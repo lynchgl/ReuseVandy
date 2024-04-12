@@ -56,6 +56,11 @@ const MessagingInteraction = ({ currentUser, selectedUser, messages, updateMessa
                                 key={message.id}
                                 className={`message-bubble ${message.senderId === selectedUser.userId ? 'received-message' : 'sent-message'}`}
                             >
+                                {message.listingName && (
+                                    <div className="listing-name">
+                                    In regards to {message.listingName} listed by {message.listingPerson}
+                                </div>
+                                )}
                                 {message.content}
                             </div>
                         ))}
